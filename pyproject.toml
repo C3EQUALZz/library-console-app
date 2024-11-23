@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "library-console-app"
+version = "0.1.0"
+description = "Console application describing the interaction with library"
+authors = ["c3equalz <dan.kovalev2013@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+mypy = "^1.13.0"
+ruff = "^0.8.0"
+isort = "^5.13.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,42 @@
+from dataclasses import dataclass
+from uuid import UUID
+from app.logic.commands.base import AbstractCommand
+
+
+@dataclass(frozen=True)
+class CreateBookCommand(AbstractCommand):
+    title: str
+    author: str
+    year: int
+    status: str = "in stock"
+
+
+@dataclass(frozen=True)
+class UpdateBookCommand(AbstractCommand):
+    title: str
+    author: str
+    year: int
+    status: str
+
+
+@dataclass(frozen=True)
+class DeleteBookCommand(AbstractCommand):
+    title: str
+    author: str
+    year: int
+    status: str
+
+
+@dataclass(frozen=True)
+class GetBookByIdCommand(AbstractCommand):
+    book_id: UUID
+
+
+@dataclass(frozen=True)
+class GetBookByTitleCommand(AbstractCommand):
+    title: str
+
+
+@dataclass(frozen=True)
+class GetAllBooksCommand(AbstractCommand):
+    pass

@@ -1,17 +1,16 @@
-from dataclasses import dataclass, asdict, field
 from abc import ABC
+from dataclasses import dataclass, asdict
 from typing import Optional, Any, Dict, Set
-from uuid import uuid4, UUID
 
 
-@dataclass(eq=False)
-class BaseEntity(ABC):
+@dataclass(frozen=True)
+class AbstractEvent(ABC):
     """
-    Base model, from which any domain model should be inherited.
+    Base event, from which any domain event should be inherited.
+    Events represents internal operations, which may be executed.
     """
-    oid: UUID = field(default_factory=lambda: uuid4(), kw_only=True)
 
-    async def to_dict(
+    def to_dict(
             self,
             exclude: Optional[Set[str]] = None,
             include: Optional[Dict[str, Any]] = None
@@ -36,11 +35,3 @@ class BaseEntity(ABC):
             data.update(include)
 
         return data
-
-    def __eq__(self, other: "BaseEntity") -> bool:
-        if not isinstance(other, BaseEntity):
-            raise NotImplementedError
-        return self.oid == other.oid
-
-    def __hash__(self) -> int:
-        return hash(self.oid)

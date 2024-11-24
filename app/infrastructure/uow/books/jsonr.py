@@ -1,11 +1,13 @@
 import json
 from pathlib import Path
-from typing import Optional, Self
+from typing import Optional, Self, List
 
 from app.infrastructure.repositories.books.base import BooksRepository
 from app.infrastructure.repositories.books.jsonr import JsonBooksRepository
 from app.infrastructure.uow.base import AbstractUnitOfWork
 from app.infrastructure.uow.books.base import BooksUnitOfWork
+from app.domain.entities.books import Book
+from app.settings.config import settings
 
 
 class JsonAbstractUnitOfWork(AbstractUnitOfWork):
@@ -14,19 +16,16 @@ class JsonAbstractUnitOfWork(AbstractUnitOfWork):
     which would be based on SQLAlchemy logics.
     """
 
-    def __init__(self, file_path: Optional[str] = "data.json") -> None:
+    def __init__(self, file_path: Optional[str] = settings.path_to_database_json_file) -> None:
         super().__init__()
-        self._data = []
-        self._file_path = file_path
-        self._backup = None
+        self._data: List[Book] = []
+        self._file_path: Path = Path(file_path)
+        self._backup: Optional[str] = None
 
     def __enter__(self) -> Self:
-        if Path(self._file_path).exists() and Path(self._file_path).is_file():
+        if self._file_path.exists() and self._file_path.is_file():
             with open(self._file_path, "r", encoding="utf-8") as f:
-                try:
-                    self._data = json.load(f)
-                except json.JSONDecodeError:
-                    self._data = []
+                self._data = json.load(f)
         else:
             self._data = []
 

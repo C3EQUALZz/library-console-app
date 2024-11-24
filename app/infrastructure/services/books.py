@@ -65,10 +65,18 @@ class BooksService:
 
     def update(self, book: Book) -> Book:
         with self._uow as uow:
-            existing_book = uow.books.get(book.oid)
+            existing_book = uow.books.get_by_title_and_author(
+                title=book.title.as_generic_type(),
+                author=book.author.as_generic_type()
+            )
+
             if not existing_book:
-                raise BookNotFoundException(book.oid)
-            updated_book = uow.books.update(oid=book.oid, model=book)
+                raise BookNotFoundException(
+                    f"with title: {book.title.as_generic_type()},"
+                    f" author: {book.author.as_generic_type()}"
+                )
+
+            updated_book = uow.books.update(oid=existing_book.oid, model=book)
             uow.commit()
             return updated_book
 

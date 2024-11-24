@@ -29,6 +29,8 @@ def create(book_data: CreateBookScheme) -> Book:
             )
         )
 
+        logger.info("Successfully created book [%s]", messagebus.command_result)
+
         return messagebus.command_result
 
     except ApplicationException as e:
@@ -55,7 +57,9 @@ def update(book_data: UpdateBookScheme) -> Book:
         return messagebus.command_result
 
     except ApplicationException as e:
-        logging.exception(e.message)
+        logger.error(e.message)
+
+
 
 
 def delete(book_data: DeleteBookScheme) -> None:
@@ -75,18 +79,20 @@ def delete(book_data: DeleteBookScheme) -> None:
             )
         )
 
+        logger.info("Successfully deleted book [%s]", messagebus.command_result)
+
         return messagebus.command_result
 
     except ApplicationException as e:
-        logging.exception(e.message)
+        logger.error(e.message)
 
 
 if __name__ == '__main__':
     print(
-        delete(
-            DeleteBookScheme(
+        create(
+            CreateBookScheme(
                 title="Василий Теркин",
-                author="Александр Твардовский",
+                author="Александр Кек",
                 year=2011
             )
         )

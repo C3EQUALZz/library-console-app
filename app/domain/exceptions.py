@@ -6,7 +6,7 @@ from app.exceptions import ApplicationException
 class DomainException(ApplicationException):
     @property
     def message(self) -> str:
-        return 'Произошла ошибка на уровне доменов'
+        return 'Exception on domain layer'
 
 
 @dataclass(eq=False)

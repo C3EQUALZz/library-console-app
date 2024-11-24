@@ -1,15 +1,15 @@
 from abc import ABC, abstractmethod
 from typing import Self, List, Generator
+
 from app.logic.events.base import AbstractEvent
-from dataclasses import dataclass, field
 
 
-@dataclass
 class AbstractUnitOfWork(ABC):
     """
     Interface for any units of work, which would be used for transaction atomicity, according DDD.
     """
-    _events: List[AbstractEvent] = field(default_factory=list)
+    def __init__(self) -> None:
+        self._events: List[AbstractEvent] = []
 
     def __enter__(self) -> Self:
         return self

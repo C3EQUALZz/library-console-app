@@ -24,12 +24,11 @@ class DeleteBookCommand(AbstractCommand):
     title: str
     author: str
     year: int
-    status: str
 
 
 @dataclass(frozen=True)
 class GetBookByIdCommand(AbstractCommand):
-    book_id: UUID
+    book_id: str
 
 
 @dataclass(frozen=True)

@@ -1,5 +1,5 @@
 from typing import Optional, List
-from uuid import UUID
+
 from app.domain.entities.books import Book
 from app.infrastructure.exceptions import BookNotFoundException
 from app.infrastructure.uow.books.base import BooksUnitOfWork
@@ -21,7 +21,7 @@ class BooksService:
 
     def check_existence(
             self,
-            oid: Optional[UUID] = None,
+            oid: Optional[str] = None,
             title: Optional[str] = None
     ) -> bool:
         if not (oid or title):
@@ -41,9 +41,23 @@ class BooksService:
         with self._uow as uow:
             return uow.books.get_by_title(title)
 
-    def get_by_id(self, oid: UUID) -> Book:
+    def get_by_title_and_author(self, title: str, author: str) -> Book:
         with self._uow as uow:
-            return uow.books.get(oid)
+            existing_book = uow.books.get_by_title_and_author(title, author)
+
+            if not existing_book:
+                raise BookNotFoundException(f"with title: {title}, author: {author}")
+
+            return existing_book
+
+    def get_by_id(self, oid: str) -> Book:
+        with self._uow as uow:
+            existing_book = uow.books.get(oid)
+
+            if not existing_book:
+                raise BookNotFoundException(oid)
+
+            return existing_book
 
     def get_all(self) -> List[Book]:
         with self._uow as uow:
@@ -53,15 +67,15 @@ class BooksService:
         with self._uow as uow:
             existing_book = uow.books.get(book.oid)
             if not existing_book:
-                raise BookNotFoundException()
+                raise BookNotFoundException(book.oid)
             updated_book = uow.books.update(oid=book.oid, model=book)
             uow.commit()
             return updated_book
 
-    def delete(self, oid: UUID) -> None:
+    def delete(self, oid: str) -> None:
         with self._uow as uow:
             existing_book = uow.books.get(oid)
             if not existing_book:
-                raise BookNotFoundException()
+                raise BookNotFoundException(oid)
             uow.books.delete(oid)
             uow.commit()

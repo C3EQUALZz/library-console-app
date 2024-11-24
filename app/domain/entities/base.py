@@ -1,7 +1,7 @@
-from dataclasses import dataclass, asdict, field
 from abc import ABC
+from dataclasses import dataclass, asdict, field
 from typing import Optional, Any, Dict, Set
-from uuid import uuid4, UUID
+from uuid import uuid4
 
 
 @dataclass(eq=False)
@@ -9,7 +9,7 @@ class BaseEntity(ABC):
     """
     Base model, from which any domain model should be inherited.
     """
-    oid: UUID = field(default_factory=lambda: uuid4(), kw_only=True)
+    oid: str = field(default_factory=lambda: str(uuid4()), kw_only=True)
 
     async def to_dict(
             self,

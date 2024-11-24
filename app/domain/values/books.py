@@ -1,10 +1,10 @@
 import re
-
 from dataclasses import dataclass
 from datetime import datetime
 from typing import NoReturn, override
 
-from app.domain.exceptions import EmptyTextException, ValueTooLongException, BadNameFormatException, FakeYearException
+from app.domain.exceptions import EmptyTextException, ValueTooLongException, BadNameFormatException, FakeYearException, \
+    InvalidBookStatus
 from app.domain.utils.enums import BookStatusEnum
 from app.domain.values.base import BaseValueObject
 
@@ -73,7 +73,7 @@ class Status(BaseValueObject):
             raise EmptyTextException()
 
         if not self.value in set(BookStatusEnum.__members__.values()):
-            raise ValueTooLongException(self.value)
+            raise InvalidBookStatus(self.value)
 
     @override
     def as_generic_type(self) -> str:

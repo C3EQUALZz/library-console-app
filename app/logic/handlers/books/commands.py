@@ -10,7 +10,7 @@ from app.logic.commands.books import (
     GetBookByTitleCommand,
     GetAllBooksCommand
 )
-from app.logic.exceptions import BookNotExistsException
+from app.logic.exceptions import BookNotExistsException, BookAlreadyExistsException
 from app.logic.handlers.books.base import BooksCommandHandler
 
 
@@ -25,8 +25,8 @@ class CreateBookCommandHandler(BooksCommandHandler):
 
         books_service: BooksService = BooksService(uow=self._uow)
 
-        if not books_service.check_existence(title=command.title):
-            raise BookNotExistsException()
+        if books_service.check_existence(title=command.title):
+            raise BookAlreadyExistsException(command.title)
 
         book: Book = Book(**command.to_dict())
 
@@ -52,7 +52,7 @@ class DeleteBookCommandHandler(BooksCommandHandler):
         if not books_service.check_existence(title=command.title):
             raise BookNotExistsException()
 
-        book: Book = Book(**command.to_dict())
+        book = books_service.get_by_title_and_author(title=command.title, author=command.author)
 
         return books_service.delete(oid=book.oid)
 

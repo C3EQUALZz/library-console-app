@@ -26,6 +26,15 @@ class ValueTooLongException(DomainException):
 
 
 @dataclass(eq=False)
+class InvalidBookStatus(DomainException):
+    value: str
+
+    @property
+    def message(self) -> str:
+        return f"Invalid book status: {self.value}"
+
+
+@dataclass(eq=False)
 class BadNameFormatException(DomainException):
     value: str
 

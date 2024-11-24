@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import List, Optional
+
 from app.domain.entities.base import BaseEntity
-from app.infrastructure.repositories.base import AbstractRepository
 from app.domain.entities.books import Book
-from uuid import UUID
+from app.infrastructure.repositories.base import AbstractRepository
 
 
 @dataclass
@@ -20,19 +20,23 @@ class BooksRepository(AbstractRepository, ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def get_by_title_and_author(self, title: str, author: str) -> Optional[Book]:
+        raise NotImplementedError
+
+    @abstractmethod
     def add(self, model: BaseEntity) -> Book:
         raise NotImplementedError
 
     @abstractmethod
-    def get(self, oid: UUID) -> Optional[Book]:
+    def get(self, oid: str) -> Optional[Book]:
         raise NotImplementedError
 
     @abstractmethod
-    def update(self, oid: UUID, model: BaseEntity) -> Book:
+    def update(self, oid: str, model: BaseEntity) -> Book:
         raise NotImplementedError
 
     @abstractmethod
-    def delete(self, oid: UUID) -> None:
+    def delete(self, oid: str) -> None:
         raise NotImplementedError
 
     @abstractmethod

@@ -20,7 +20,7 @@ from app.logic.handlers.books.commands import (
     GetAllBooksCommandHandler
 )
 
-EVENTS_HANDLER_FOR_INJECTION: Dict[Type[AbstractEvent], List[Type[AbstractEventHandler]]] = {
+EVENTS_HANDLERS_FOR_INJECTION: Dict[Type[AbstractEvent], List[Type[AbstractEventHandler]]] = {
 
 }
 

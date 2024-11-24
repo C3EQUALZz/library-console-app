@@ -9,7 +9,7 @@ class Book(BaseEntity):
     title: Title
     author: Author
     year: Year
-    status: Status
+    status: Status = "in-stock"
 
     __hash__ = BaseEntity.__hash__
     __eq__ = BaseEntity.__eq__

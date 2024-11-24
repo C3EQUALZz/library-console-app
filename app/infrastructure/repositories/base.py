@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
 from typing import List, Optional
 from uuid import UUID
+
 from app.domain.entities.base import BaseEntity
 
 
-@dataclass
 class AbstractRepository(ABC):
     """
     Interface for any repository, which would be used for work with domain model, according DDD.

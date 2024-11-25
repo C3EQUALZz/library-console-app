@@ -14,12 +14,14 @@ But the problem is that I wrote my code in sync mode, because application must b
 from app.application.api.books.dependecies import (
     create,
     delete,
+    read,
     read_all
 )
 
 from app.application.api.books.schemas import (
     CreateBookScheme,
     DeleteBookScheme,
+    ReadBookScheme,
     ReadAllBookScheme
 )
 
@@ -62,8 +64,20 @@ def delete_book() -> None:
 
 
 def read_book() -> None:
-    print("Читаю книги")
+    """
+    Function that associated with handler read book (finds book by id)
+    """
+    oid = input("Please write id of the book: ")
+
+    read(
+        ReadBookScheme(
+            oid=oid
+        )
+    )
 
 
 def read_all_books() -> None:
+    """
+    Function that associated with handler read all books
+    """
     read_all(ReadAllBookScheme())

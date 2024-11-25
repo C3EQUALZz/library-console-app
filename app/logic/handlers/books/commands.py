@@ -90,7 +90,7 @@ class GetBookByIdCommandHandler(BooksCommandHandler[GetBookByIdCommand]):
         :return: domain entity of the book
         """
         books_service: BooksService = BooksService(uow=self._uow)
-        book = books_service.get_by_id(command.book_id)
+        book = books_service.get_by_id(command.oid)
         if not book:
             raise BookNotExistsException()
         return book

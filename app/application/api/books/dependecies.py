@@ -17,8 +17,7 @@ from app.logic.commands.books import (
     CreateBookCommand,
     DeleteBookCommand,
     GetAllBooksCommand,
-    GetBookByTitleAndAuthorCommand,
-    UpdateBookCommand,
+    UpdateBookCommand, GetBookByIdCommand,
 )
 from app.logic.handlers import (
     COMMANDS_HANDLERS_FOR_INJECTION,
@@ -69,7 +68,7 @@ def read(book_data: ReadBookScheme) -> Book:
 
         messagebus: MessageBus = bootstrap.get_messagebus()
 
-        messagebus.handle(GetBookByTitleAndAuthorCommand(**book_data.model_dump()))
+        messagebus.handle(GetBookByIdCommand(**book_data.model_dump()))
 
         logger.info("Successfully find book [%s]", messagebus.command_result)
 
@@ -155,4 +154,3 @@ def delete(book_data: DeleteBookScheme) -> None:
         # This is done so that the console application does not go down.
         # If it were possible to use FastAPI, then HTTP Exception would be thrown here
         return  # type: ignore
-

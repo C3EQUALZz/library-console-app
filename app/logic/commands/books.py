@@ -29,7 +29,7 @@ class DeleteBookCommand(AbstractCommand):
 
 @dataclass(frozen=True)
 class GetBookByIdCommand(AbstractCommand):
-    book_id: str
+    oid: str
 
 
 @dataclass(frozen=True)

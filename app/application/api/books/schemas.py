@@ -40,3 +40,8 @@ class DeleteBookScheme(BaseScheme):
     title: str
     author: str
     year: int
+
+
+@dataclass(frozen=True)
+class ReadAllBookScheme(BaseScheme):
+    ...

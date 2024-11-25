@@ -52,14 +52,10 @@ def delete_book() -> None:
     """
     Function that associated with handler delete book
     """
-    author = input("Please write name of the author: ")
-    title = input("Please write name of the book: ")
-    year = int(input("Please write name of the year: "))
+    oid = input("Please write id of the book: ")
 
     delete(DeleteBookScheme(
-        title=title,
-        author=author,
-        year=year
+        oid=oid
     ))
 
 

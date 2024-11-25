@@ -22,9 +22,7 @@ class UpdateBookCommand(AbstractCommand):
 
 @dataclass(frozen=True)
 class DeleteBookCommand(AbstractCommand):
-    title: str
-    author: str
-    year: int
+    oid: str
 
 
 @dataclass(frozen=True)

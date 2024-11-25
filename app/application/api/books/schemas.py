@@ -36,9 +36,7 @@ class ReadBookScheme(BaseScheme):
 
 @dataclass(frozen=True)
 class DeleteBookScheme(BaseScheme):
-    title: str
-    author: str
-    year: int
+    oid: str
 
 
 @dataclass(frozen=True)

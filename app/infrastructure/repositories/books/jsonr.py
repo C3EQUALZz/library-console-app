@@ -11,16 +11,16 @@ from app.infrastructure.exceptions import (
     BookNotFoundException,
     InstanceException,
 )
-from app.infrastructure.repositories.base import AbstractRepository
+from app.infrastructure.repositories.base import AbstractRepository, BaseEntityType
 from app.infrastructure.repositories.books.base import BooksRepository
 
 
-class JsonAbstractRepository(AbstractRepository, ABC):
+class JsonAbstractRepository(AbstractRepository[BaseEntityType], ABC):
     """
     Repository interface for json, from which should be inherited all other repositories.
     """
 
-    def __init__(self, session: List) -> None:
+    def __init__(self, session: List[BaseEntityType]) -> None:
         self._session = session
 
 

@@ -1,3 +1,5 @@
+import logging
+
 from typing import Final, Tuple, Dict, Callable
 
 from app.application.api.books.handlers import (
@@ -29,16 +31,18 @@ ACTIONS: Final[Dict[str, Callable[[], None]]] = {
     "6": exit
 }
 
+logger = logging.getLogger(__name__)
+
 
 def main() -> None:
     while True:
         for comment in CHOICES_FOR_ACTION:
-            print(comment)
+            logger.info(comment)
 
         choice = input("Select an action (1-6): ").strip()
 
         if choice not in ACTIONS:
-            print("Invalid choice! Please select a valid option (1-6).")
+            logger.error("Invalid choice! Please select a valid option (1-6).")
             continue
 
         ACTIONS[choice]()

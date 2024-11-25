@@ -1,11 +1,12 @@
 import json
 import os
 from pathlib import Path
+
 from typing import (
     List,
-    Optional,
     override,
     Self,
+    Any
 )
 
 from app.domain.entities.books import Book
@@ -43,7 +44,7 @@ class JsonAbstractUnitOfWork(AbstractUnitOfWork):
         return super().__enter__()
 
     @override
-    def __exit__(self, *args, **kwargs) -> None:
+    def __exit__(self, *args: tuple[Any, ...], **kwargs: dict[str, Any]) -> None:
         if self._data != json.loads(self._backup):
             self.commit()
         super().__exit__(*args, **kwargs)

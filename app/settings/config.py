@@ -17,6 +17,7 @@ class LoggerSettings:
     """
     The configuration was taken from video: https://youtu.be/9L77QExPmI0?si=ZB9GTB08OY7cMhyR
     """
+
     __path_to_logger_config = PROJECT_DIR / "resources" / "config" / "logger-config.json"
 
     def __post_init__(self) -> None:
@@ -29,13 +30,13 @@ class LoggerSettings:
 
         # Почему-то работает только, если прописывать абсолютный путь до файла
         # Разными способами пытался в json конфигурацию сделать, но бесполезно
-        config['handlers']['file']['filename'] = str(log_dir / "debug-info.log")
+        config["handlers"]["file"]["filename"] = str(log_dir / "debug-info.log")
 
         logging.config.dictConfig(config)
         queue_handler = logging.getHandlerByName("queue_handler")
         if queue_handler is not None:
-            queue_handler.listener.start() # type: ignore[attr-defined]
-            atexit.register(queue_handler.listener.stop) # type: ignore[attr-defined]
+            queue_handler.listener.start()  # type: ignore[attr-defined]
+            atexit.register(queue_handler.listener.stop)  # type: ignore[attr-defined]
 
 
 @dataclass(frozen=True)

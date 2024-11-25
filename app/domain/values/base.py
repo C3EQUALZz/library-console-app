@@ -10,6 +10,7 @@ class BaseValueObject(ABC, Generic[T]):
     """
     Base value object, from which any domain value object should be inherited.
     """
+
     value: T
 
     def __post_init__(self) -> None:

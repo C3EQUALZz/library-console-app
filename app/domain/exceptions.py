@@ -7,7 +7,7 @@ from app.exceptions import ApplicationException
 class DomainException(ApplicationException):
     @property
     def message(self) -> str:
-        return 'Exception on domain layer'
+        return "Exception on domain layer"
 
 
 @dataclass(eq=False)

@@ -19,17 +19,11 @@ class BooksService:
             uow.commit()
             return new_book
 
-    def check_existence(
-            self,
-            oid: Optional[str] = None,
-            title: Optional[str] = None
-    ) -> bool:
-
+    def check_existence(self, oid: Optional[str] = None, title: Optional[str] = None) -> bool:
         if not (oid or title):
             return False
 
         with self._uow as uow:
-
             if oid and uow.books.get(oid):
                 return True
 
@@ -72,14 +66,12 @@ class BooksService:
     def update(self, book: Book) -> Book:
         with self._uow as uow:
             existing_book = uow.books.get_by_title_and_author(
-                title=book.title.as_generic_type(),
-                author=book.author.as_generic_type()
+                title=book.title.as_generic_type(), author=book.author.as_generic_type()
             )
 
             if not existing_book:
                 raise BookNotFoundException(
-                    f"with title: {book.title.as_generic_type()},"
-                    f" author: {book.author.as_generic_type()}"
+                    f"with title: {book.title.as_generic_type()}," f" author: {book.author.as_generic_type()}"
                 )
 
             updated_book = uow.books.update(oid=existing_book.oid, model=book)

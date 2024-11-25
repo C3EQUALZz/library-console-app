@@ -20,9 +20,10 @@ class JsonAbstractUnitOfWork(AbstractUnitOfWork):
     @override
     def __init__(self, file_path: os.PathLike[str] | str = settings.path_to_database_json_file) -> None:
         super().__init__()
+
         self._data: List[Book] = []
         self._file_path = Path(file_path)
-        self._backup: Optional[str] = None
+        self._backup: str = ""
 
     @override
     def __enter__(self) -> Self:

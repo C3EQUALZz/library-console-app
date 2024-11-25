@@ -3,7 +3,8 @@ from typing import List, Optional, TypeVar, Generic
 
 from app.domain.entities.base import BaseEntity
 
-BaseEntityType = TypeVar('BaseEntityType', bound=BaseEntity)
+BaseEntityType = TypeVar("BaseEntityType", bound=BaseEntity)
+
 
 class AbstractRepository(ABC, Generic[BaseEntityType]):
     """

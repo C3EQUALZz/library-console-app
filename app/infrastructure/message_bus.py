@@ -5,19 +5,16 @@ from app.infrastructure.exceptions import MessageBusMessageException
 from app.infrastructure.uow.base import AbstractUnitOfWork
 from app.logic.commands.base import AbstractCommand
 from app.logic.events.base import AbstractEvent
-from app.logic.handlers.base import (AbstractCommandHandler,
-                                     AbstractEventHandler)
+from app.logic.handlers.base import AbstractCommandHandler, AbstractEventHandler
 
 
 class MessageBus:
-
     def __init__(
-            self,
-            uow: AbstractUnitOfWork,
-            event_handlers: Dict[Type[AbstractEvent], List[AbstractEventHandler]],
-            command_handlers: Dict[Type[AbstractCommand], AbstractCommandHandler],
+        self,
+        uow: AbstractUnitOfWork,
+        event_handlers: Dict[Type[AbstractEvent], List[AbstractEventHandler]],
+        command_handlers: Dict[Type[AbstractCommand], AbstractCommandHandler],
     ) -> None:
-
         self._uow: AbstractUnitOfWork = uow
         self._event_handlers: Dict[Type[AbstractEvent], List[AbstractEventHandler]] = event_handlers
         self._command_handlers: Dict[Type[AbstractCommand], AbstractCommandHandler] = command_handlers

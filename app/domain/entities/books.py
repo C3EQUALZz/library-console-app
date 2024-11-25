@@ -15,6 +15,7 @@ class Book(BaseEntity):
     - **year**: the year of writing the book
     - **status**: the status that indicates the presence or absence of the book
     """
+
     title: Title
     author: Author
     year: Year

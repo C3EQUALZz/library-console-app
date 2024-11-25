@@ -8,6 +8,7 @@ class AbstractUnitOfWork(ABC):
     """
     Interface for any units of work, which would be used for transaction atomicity, according DDD.
     """
+
     def __init__(self) -> None:
         self._events: List[AbstractEvent] = []
 
@@ -36,4 +37,3 @@ class AbstractUnitOfWork(ABC):
 
         while self._events:
             yield self._events.pop(0)
-

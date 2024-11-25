@@ -3,9 +3,13 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import NoReturn, override
 
-from app.domain.exceptions import (BadNameFormatException, EmptyTextException,
-                                   FakeYearException, InvalidBookStatus,
-                                   ValueTooLongException)
+from app.domain.exceptions import (
+    BadNameFormatException,
+    EmptyTextException,
+    FakeYearException,
+    InvalidBookStatus,
+    ValueTooLongException,
+)
 from app.domain.utils.enums import BookStatusEnum
 from app.domain.values.base import BaseValueObject
 
@@ -31,8 +35,10 @@ class Title(BaseValueObject):
 class Author(BaseValueObject):
     value: str
 
-    pattern = (r'^([А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)?\s+([А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)?)(\s+[А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)?)'
-               r'?)|([A-Z][a-z]+(-[A-Z][a-z]+)?\s+([A-Z][a-z]+(-[A-Z][a-z]+)?)(\s+[A-Z][a-z]+(-[A-Z][a-z]+)?)?)$')
+    pattern = (
+        r"^([А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)?\s+([А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)?)(\s+[А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)?)"
+        r"?)|([A-Z][a-z]+(-[A-Z][a-z]+)?\s+([A-Z][a-z]+(-[A-Z][a-z]+)?)(\s+[A-Z][a-z]+(-[A-Z][a-z]+)?)?)$"
+    )
 
     @override
     def validate(self) -> None:

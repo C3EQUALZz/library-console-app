@@ -1,4 +1,7 @@
-from typing import List, Optional
+from typing import (
+    List,
+    Optional,
+)
 
 from app.domain.entities.books import Book
 from app.infrastructure.services.books import BooksService
@@ -11,7 +14,10 @@ from app.logic.commands.books import (
     GetBookByTitleCommand,
     UpdateBookCommand,
 )
-from app.logic.exceptions import BookAlreadyExistsException, BookNotExistsException
+from app.logic.exceptions import (
+    BookAlreadyExistsException,
+    BookNotExistsException,
+)
 from app.logic.handlers.books.base import BooksCommandHandler
 
 

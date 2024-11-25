@@ -1,7 +1,12 @@
 import json
 import os
 from pathlib import Path
-from typing import List, Optional, Self, override
+from typing import (
+    List,
+    Optional,
+    override,
+    Self,
+)
 
 from app.domain.entities.books import Book
 from app.infrastructure.repositories.books.base import BooksRepository

@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 from typing import Any
 
-from tomlkit import value
-
 from app.exceptions import ApplicationException
+from tomlkit import value
 
 
 @dataclass(eq=False)

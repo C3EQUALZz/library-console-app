@@ -1,4 +1,7 @@
-from typing import List, Optional
+from typing import (
+    List,
+    Optional,
+)
 
 from app.domain.entities.books import Book
 from app.infrastructure.exceptions import BookNotFoundException

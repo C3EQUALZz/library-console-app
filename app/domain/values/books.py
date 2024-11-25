@@ -1,7 +1,10 @@
 import re
 from dataclasses import dataclass
 from datetime import datetime
-from typing import NoReturn, override
+from typing import (
+    NoReturn,
+    override,
+)
 
 from app.domain.exceptions import (
     BadNameFormatException,

@@ -1,6 +1,16 @@
 from abc import ABC
-from dataclasses import asdict, dataclass, field
-from typing import Any, Dict, Optional, Set, override
+from dataclasses import (
+    asdict,
+    dataclass,
+    field,
+)
+from typing import (
+    Any,
+    Dict,
+    Optional,
+    override,
+    Set,
+)
 from uuid import uuid4
 
 

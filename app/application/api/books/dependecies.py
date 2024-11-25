@@ -1,9 +1,12 @@
 import logging
 from typing import List
 
-from mypyc.irbuild.builder import overload
-
-from app.application.api.books.schemas import CreateBookScheme, DeleteBookScheme, ReadBookScheme, UpdateBookScheme
+from app.application.api.books.schemas import (
+    CreateBookScheme,
+    DeleteBookScheme,
+    ReadBookScheme,
+    UpdateBookScheme,
+)
 from app.domain.entities.books import Book
 from app.exceptions import ApplicationException
 from app.infrastructure.bootstrap import Bootstrap
@@ -16,7 +19,11 @@ from app.logic.commands.books import (
     GetBookByTitleAndAuthorCommand,
     UpdateBookCommand,
 )
-from app.logic.handlers import COMMANDS_HANDLERS_FOR_INJECTION, EVENTS_HANDLERS_FOR_INJECTION
+from app.logic.handlers import (
+    COMMANDS_HANDLERS_FOR_INJECTION,
+    EVENTS_HANDLERS_FOR_INJECTION,
+)
+
 
 logger = logging.getLogger(__name__)
 

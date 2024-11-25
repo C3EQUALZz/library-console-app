@@ -1,4 +1,8 @@
-from typing import Dict, List, Type
+from typing import (
+    Dict,
+    List,
+    Type,
+)
 
 from app.logic.commands.base import AbstractCommand
 from app.logic.commands.books import (
@@ -11,7 +15,10 @@ from app.logic.commands.books import (
     UpdateBookCommand,
 )
 from app.logic.events.base import AbstractEvent
-from app.logic.handlers.base import AbstractCommandHandler, AbstractEventHandler
+from app.logic.handlers.base import (
+    AbstractCommandHandler,
+    AbstractEventHandler,
+)
 from app.logic.handlers.books.commands import (
     CreateBookCommandHandler,
     DeleteBookCommandHandler,
@@ -21,6 +28,7 @@ from app.logic.handlers.books.commands import (
     GetBookByTitleCommandHandler,
     UpdateBookCommandHandler,
 )
+
 
 EVENTS_HANDLERS_FOR_INJECTION: Dict[Type[AbstractEvent], List[Type[AbstractEventHandler]]] = {}
 

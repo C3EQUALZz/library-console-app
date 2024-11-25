@@ -1,7 +1,16 @@
-from abc import ABC, abstractmethod
-from typing import List, Optional, TypeVar, Generic
+from abc import (
+    ABC,
+    abstractmethod,
+)
+from typing import (
+    Generic,
+    List,
+    Optional,
+    TypeVar,
+)
 
 from app.domain.entities.base import BaseEntity
+
 
 BaseEntityType = TypeVar("BaseEntityType", bound=BaseEntity)
 

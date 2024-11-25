@@ -1,7 +1,11 @@
 from abc import ABC
 
 from app.infrastructure.uow.books.base import BooksUnitOfWork
-from app.logic.handlers.base import AbstractCommandHandler, AbstractEventHandler, CT
+from app.logic.handlers.base import (
+    AbstractCommandHandler,
+    AbstractEventHandler,
+    CT,
+)
 
 
 class BooksEventHandler(AbstractEventHandler, ABC):

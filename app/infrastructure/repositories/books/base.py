@@ -1,5 +1,11 @@
-from abc import ABC, abstractmethod
-from typing import List, Optional
+from abc import (
+    ABC,
+    abstractmethod,
+)
+from typing import (
+    List,
+    Optional,
+)
 
 from app.domain.entities.base import BaseEntity
 from app.domain.entities.books import Book

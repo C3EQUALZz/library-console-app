@@ -1,9 +1,16 @@
 from abc import ABC
-from typing import List, Optional, override
+from typing import (
+    List,
+    Optional,
+    override,
+)
 
 from app.domain.entities.base import BaseEntity
 from app.domain.entities.books import Book
-from app.infrastructure.exceptions import BookNotFoundException, InstanceException
+from app.infrastructure.exceptions import (
+    BookNotFoundException,
+    InstanceException,
+)
 from app.infrastructure.repositories.base import AbstractRepository
 from app.infrastructure.repositories.books.base import BooksRepository
 

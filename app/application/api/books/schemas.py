@@ -1,5 +1,11 @@
-from dataclasses import asdict, dataclass
-from typing import Any, Optional
+from dataclasses import (
+    asdict,
+    dataclass,
+)
+from typing import (
+    Any,
+    Optional,
+)
 
 
 @dataclass(frozen=True)

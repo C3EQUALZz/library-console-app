@@ -1,10 +1,17 @@
-def create(): ...
+def create():
+    print("Cоздаю книгу")
 
 
-def update(): ...
+def update():
+    print("Обновляю книгу")
 
 
-def delete(): ...
+def delete():
+    print("Удаляю книги")
 
 
-def read(): ...
+def read():
+    print("Читаю книги")
+
+def read_all():
+    print("Читаю все книги")

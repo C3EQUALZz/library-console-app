@@ -6,6 +6,9 @@ from typing import (
     Generator,
     List,
     Self,
+    Any,
+    Tuple,
+    Dict
 )
 
 from app.logic.events.base import AbstractEvent
@@ -22,7 +25,7 @@ class AbstractUnitOfWork(ABC):
     def __enter__(self) -> Self:
         return self
 
-    def __exit__(self, *args, **kwargs) -> None:
+    def __exit__(self, *args: Tuple[Any, ...], **kwargs: Dict[str, Any]) -> None:
         self.rollback()
 
     @abstractmethod

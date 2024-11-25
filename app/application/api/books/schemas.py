@@ -31,8 +31,7 @@ class UpdateBookScheme(BaseScheme):
 
 @dataclass(frozen=True)
 class ReadBookScheme(BaseScheme):
-    title: str
-    author: str
+    oid: str
 
 
 @dataclass(frozen=True)

@@ -1,16 +1,13 @@
-from typing import Optional, List
+from typing import List, Optional
 
 from app.domain.entities.books import Book
 from app.infrastructure.services.books import BooksService
-from app.logic.commands.books import (
-    CreateBookCommand,
-    UpdateBookCommand,
-    DeleteBookCommand,
-    GetBookByIdCommand,
-    GetBookByTitleCommand,
-    GetAllBooksCommand
-)
-from app.logic.exceptions import BookNotExistsException, BookAlreadyExistsException
+from app.logic.commands.books import (CreateBookCommand, DeleteBookCommand,
+                                      GetAllBooksCommand, GetBookByIdCommand,
+                                      GetBookByTitleAndAuthorCommand,
+                                      GetBookByTitleCommand, UpdateBookCommand)
+from app.logic.exceptions import (BookAlreadyExistsException,
+                                  BookNotExistsException)
 from app.logic.handlers.books.base import BooksCommandHandler
 
 
@@ -70,6 +67,15 @@ class GetBookByTitleCommandHandler(BooksCommandHandler):
     def __call__(self, command: GetBookByTitleCommand) -> Optional[Book]:
         books_service: BooksService = BooksService(uow=self._uow)
         book = books_service.get_by_title(command.title)
+        if not book:
+            raise BookNotExistsException()
+        return book
+
+
+class GetBookByTitleAndAuthorCommandHandler(BooksCommandHandler):
+    def __call__(self, command: GetBookByTitleAndAuthorCommand) -> Optional[Book]:
+        books_service: BooksService = BooksService(uow=self._uow)
+        book = books_service.get_by_title_and_author(title=command.title, author=command.author)
         if not book:
             raise BookNotExistsException()
         return book

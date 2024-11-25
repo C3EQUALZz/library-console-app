@@ -1,6 +1,5 @@
-from typing import Optional, Any
-
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
+from typing import Any, Optional
 
 
 @dataclass(frozen=True)
@@ -26,7 +25,8 @@ class UpdateBookScheme(BaseScheme):
 
 @dataclass(frozen=True)
 class ReadBookScheme(BaseScheme):
-    ...
+    title: str
+    author: str
 
 
 @dataclass(frozen=True)

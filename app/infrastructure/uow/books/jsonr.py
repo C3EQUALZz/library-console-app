@@ -1,12 +1,12 @@
 import json
 from pathlib import Path
-from typing import Optional, Self, List
+from typing import List, Optional, Self
 
+from app.domain.entities.books import Book
 from app.infrastructure.repositories.books.base import BooksRepository
 from app.infrastructure.repositories.books.jsonr import JsonBooksRepository
 from app.infrastructure.uow.base import AbstractUnitOfWork
 from app.infrastructure.uow.books.base import BooksUnitOfWork
-from app.domain.entities.books import Book
 from app.settings.config import settings
 
 

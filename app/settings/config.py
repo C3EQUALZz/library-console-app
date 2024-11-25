@@ -23,6 +23,9 @@ class LoggerSettings:
 
         log_dir = PROJECT_DIR / "resources" / "logs"
         log_dir.mkdir(parents=True, exist_ok=True)
+
+        # Почему-то работает только, если прописывать абсолютный путь до файла
+        # Разными способами пытался в json конфигурацию сделать, но бесполезно
         config['handlers']['file']['filename'] = str(log_dir / "debug-info.log")
 
         logging.config.dictConfig(config)

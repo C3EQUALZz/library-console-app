@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from app.domain.entities.base import BaseEntity
-from app.domain.values.books import Title, Author, Year, Status
+from app.domain.values.books import Author, Status, Title, Year
 
 
 @dataclass(eq=False)

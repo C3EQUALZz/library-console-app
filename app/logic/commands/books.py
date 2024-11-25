@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from uuid import UUID
+
 from app.logic.commands.base import AbstractCommand
 
 
@@ -34,6 +35,12 @@ class GetBookByIdCommand(AbstractCommand):
 @dataclass(frozen=True)
 class GetBookByTitleCommand(AbstractCommand):
     title: str
+
+
+@dataclass(frozen=True)
+class GetBookByTitleAndAuthorCommand(AbstractCommand):
+    title: str
+    author: str
 
 
 @dataclass(frozen=True)

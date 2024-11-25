@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
-from typing import Optional, override, List
+from typing import List, Optional, override
 from uuid import UUID
+
 from app.domain.entities.books import Book
 from app.infrastructure.repositories.books.base import BooksRepository
 

@@ -1,13 +1,13 @@
 import inspect
 from types import MappingProxyType
-from typing import Union, Type, Dict, Any, List, Optional
-
-from app.logic.commands.base import AbstractCommand
-from app.logic.events.base import AbstractEvent
-from app.infrastructure.uow.base import AbstractUnitOfWork
-from app.logic.handlers.base import AbstractEventHandler, AbstractCommandHandler
+from typing import Any, Dict, List, Optional, Type, Union
 
 from app.infrastructure.message_bus import MessageBus
+from app.infrastructure.uow.base import AbstractUnitOfWork
+from app.logic.commands.base import AbstractCommand
+from app.logic.events.base import AbstractEvent
+from app.logic.handlers.base import (AbstractCommandHandler,
+                                     AbstractEventHandler)
 
 
 class Bootstrap:

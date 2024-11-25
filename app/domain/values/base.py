@@ -1,6 +1,6 @@
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from abc import abstractmethod, ABC
-from typing import Generic, TypeVar, Any, NoReturn
+from typing import Any, Generic, NoReturn, TypeVar
 
 T = TypeVar("T", bound=Any)
 

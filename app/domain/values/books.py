@@ -3,8 +3,9 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import NoReturn, override
 
-from app.domain.exceptions import EmptyTextException, ValueTooLongException, BadNameFormatException, FakeYearException, \
-    InvalidBookStatus
+from app.domain.exceptions import (BadNameFormatException, EmptyTextException,
+                                   FakeYearException, InvalidBookStatus,
+                                   ValueTooLongException)
 from app.domain.utils.enums import BookStatusEnum
 from app.domain.values.base import BaseValueObject
 

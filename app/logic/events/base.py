@@ -1,6 +1,6 @@
 from abc import ABC
-from dataclasses import dataclass, asdict
-from typing import Optional, Any, Dict, Set
+from dataclasses import asdict, dataclass
+from typing import Any, Dict, Optional, Set
 
 
 @dataclass(frozen=True)

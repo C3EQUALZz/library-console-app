@@ -18,7 +18,10 @@ from app.domain.values.base import BaseValueObject
 
 
 @dataclass(frozen=True)
-class Title(BaseValueObject):
+class Title(BaseValueObject[str]):
+    """
+    Value object which associated with the book name
+    """
     value: str
 
     @override
@@ -35,7 +38,10 @@ class Title(BaseValueObject):
 
 
 @dataclass(frozen=True)
-class Author(BaseValueObject):
+class Author(BaseValueObject[str]):
+    """
+    Value object which associated with the book author
+    """
     value: str
 
     pattern = (
@@ -60,7 +66,10 @@ class Author(BaseValueObject):
 
 
 @dataclass(frozen=True)
-class Year(BaseValueObject):
+class Year(BaseValueObject[int]):
+    """
+    Value object which associated with the year of writing the book
+    """
     value: int
 
     @override
@@ -74,7 +83,10 @@ class Year(BaseValueObject):
 
 
 @dataclass(frozen=True)
-class Status(BaseValueObject):
+class Status(BaseValueObject[str]):
+    """
+    Value object which associated with the book status
+    """
     value: str
 
     @override

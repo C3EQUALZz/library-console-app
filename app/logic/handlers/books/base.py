@@ -5,10 +5,11 @@ from app.logic.handlers.base import (
     AbstractCommandHandler,
     AbstractEventHandler,
     CT,
+    ET
 )
 
 
-class BooksEventHandler(AbstractEventHandler, ABC):
+class BooksEventHandler(AbstractEventHandler[ET], ABC):
     """
     Abstract event handler class, from which every users event handler should be inherited from.
     """

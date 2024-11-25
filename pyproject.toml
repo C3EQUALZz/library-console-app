@@ -54,8 +54,8 @@ sections=[
 
 [tool.mypy]
 files = ["app", "tests"]
-python_version = "3.11"
-plugins = ['pydantic.mypy']
+python_version = "3.12"
+# plugins = ['pydantic.mypy']
 strict = true
 pretty = true
 

@@ -8,6 +8,8 @@ from app.application.api.books.handlers import (
     read_all_books
 )
 
+from app.settings.logger_config import setup_logging
+
 CHOICES_FOR_ACTION: Final[Tuple[str, ...]] = (
     "\n--- Menu of Library ---",
     "1. Add book",
@@ -43,4 +45,5 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    setup_logging()
     main()

@@ -6,6 +6,7 @@ from app.application.api.books.schemas import (
     DeleteBookScheme,
     ReadBookScheme,
     UpdateBookScheme,
+    ReadAllBookScheme,
 )
 from app.domain.entities.books import Book
 from app.exceptions import ApplicationException
@@ -24,11 +25,14 @@ from app.logic.handlers import (
     EVENTS_HANDLERS_FOR_INJECTION,
 )
 
-
 logger = logging.getLogger(__name__)
 
 
 def create(book_data: CreateBookScheme) -> Book:
+    """
+    Function which creates a book, it must be called using dependency injection.
+    For example: it can be called using Depends from FastAPI.
+    """
     try:
         bootstrap: Bootstrap = Bootstrap(
             uow=JsonBooksUnitOfWork(),
@@ -46,12 +50,16 @@ def create(book_data: CreateBookScheme) -> Book:
 
     except ApplicationException as e:
         logger.error(e.message)
-        # Делается с той целью, чтобы не легло консольное приложение.
-        # Если бы была возможность использовать FastAPI, то здесь бросался бы HTTP Exception
+        # This is done so that the console application does not go down.
+        # If it were possible to use FastAPI, then HTTP Exception would be thrown here
         return  # type: ignore
 
 
 def read(book_data: ReadBookScheme) -> Book:
+    """
+    Function which finds book, it must be called using dependency injection.
+    For example: it can be called using Depends from FastAPI.
+    """
     try:
         bootstrap: Bootstrap = Bootstrap(
             uow=JsonBooksUnitOfWork(),
@@ -69,12 +77,16 @@ def read(book_data: ReadBookScheme) -> Book:
 
     except ApplicationException as e:
         logger.error(e.message)
-        # Делается с той целью, чтобы не легло консольное приложение.
-        # Если бы была возможность использовать FastAPI, то здесь бросался бы HTTP Exception
+        # This is done so that the console application does not go down.
+        # If it were possible to use FastAPI, then HTTP Exception would be thrown here
         return  # type: ignore
 
 
-def read_all() -> List[Book]:
+def read_all(_: ReadAllBookScheme) -> List[Book]:
+    """
+    Function which return all books in library, it must be called using dependency injection.
+    For example: it can be called using Depends from FastAPI.
+    """
     try:
         bootstrap: Bootstrap = Bootstrap(
             uow=JsonBooksUnitOfWork(),
@@ -92,8 +104,8 @@ def read_all() -> List[Book]:
 
     except ApplicationException as e:
         logger.error(e.message)
-        # Делается с той целью, чтобы не легло консольное приложение.
-        # Если бы была возможность использовать FastAPI, то здесь бросался бы HTTP Exception
+        # This is done so that the console application does not go down.
+        # If it were possible to use FastAPI, then HTTP Exception would be thrown here
         return  # type: ignore
 
 
@@ -113,12 +125,16 @@ def update(book_data: UpdateBookScheme) -> Book:
 
     except ApplicationException as e:
         logger.error(e.message)
-        # Делается с той целью, чтобы не легло консольное приложение.
-        # Если бы была возможность использовать FastAPI, то здесь бросался бы HTTP Exception
+        # This is done so that the console application does not go down.
+        # If it were possible to use FastAPI, then HTTP Exception would be thrown here
         return  # type: ignore
 
 
 def delete(book_data: DeleteBookScheme) -> None:
+    """
+    Function which deletes a book, it must be called using dependency injection.
+    For example: it can be called using Depends from FastAPI.
+    """
     try:
         bootstrap: Bootstrap = Bootstrap(
             uow=JsonBooksUnitOfWork(),
@@ -136,10 +152,7 @@ def delete(book_data: DeleteBookScheme) -> None:
 
     except ApplicationException as e:
         logger.error(e.message)
-        # Делается с той целью, чтобы не легло консольное приложение.
-        # Если бы была возможность использовать FastAPI, то здесь бросался бы HTTP Exception
+        # This is done so that the console application does not go down.
+        # If it were possible to use FastAPI, then HTTP Exception would be thrown here
         return  # type: ignore
 
-
-if __name__ == "__main__":
-    print(read_all())

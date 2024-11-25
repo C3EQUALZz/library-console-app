@@ -1,11 +1,11 @@
 from typing import Final, Tuple, Dict, Callable
 
 from app.application.api.books.handlers import (
-    create,
-    delete,
-    update,
-    read,
-    read_all
+    create_book,
+    delete_book,
+    update_book,
+    read_book,
+    read_all_books
 )
 
 CHOICES_FOR_ACTION: Final[Tuple[str, ...]] = (
@@ -19,11 +19,11 @@ CHOICES_FOR_ACTION: Final[Tuple[str, ...]] = (
 )
 
 ACTIONS: Final[Dict[str, Callable[[], None]]] = {
-    "1": create,
-    "2": delete,
-    "3": read,
-    "4": read_all,
-    "5": update,
+    "1": create_book,
+    "2": delete_book,
+    "3": read_book,
+    "4": read_all_books,
+    "5": update_book,
     "6": exit
 }
 

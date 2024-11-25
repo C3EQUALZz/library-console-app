@@ -1,6 +1,8 @@
 import logging
 from typing import List
 
+from mypyc.irbuild.builder import overload
+
 from app.application.api.books.schemas import (CreateBookScheme,
                                                DeleteBookScheme,
                                                ReadBookScheme,
@@ -43,6 +45,9 @@ def create(book_data: CreateBookScheme) -> Book:
 
     except ApplicationException as e:
         logger.error(e.message)
+        # Делается с той целью, чтобы не легло консольное приложение.
+        # Если бы была возможность использовать FastAPI, то здесь бросался бы HTTP Exception
+        return  # type: ignore
 
 
 def read(book_data: ReadBookScheme) -> Book:
@@ -67,6 +72,9 @@ def read(book_data: ReadBookScheme) -> Book:
 
     except ApplicationException as e:
         logger.error(e.message)
+        # Делается с той целью, чтобы не легло консольное приложение.
+        # Если бы была возможность использовать FastAPI, то здесь бросался бы HTTP Exception
+        return  # type: ignore
 
 
 def read_all() -> List[Book]:
@@ -87,6 +95,9 @@ def read_all() -> List[Book]:
 
     except ApplicationException as e:
         logger.error(e.message)
+        # Делается с той целью, чтобы не легло консольное приложение.
+        # Если бы была возможность использовать FastAPI, то здесь бросался бы HTTP Exception
+        return  # type: ignore
 
 
 def update(book_data: UpdateBookScheme) -> Book:
@@ -110,6 +121,9 @@ def update(book_data: UpdateBookScheme) -> Book:
 
     except ApplicationException as e:
         logger.error(e.message)
+        # Делается с той целью, чтобы не легло консольное приложение.
+        # Если бы была возможность использовать FastAPI, то здесь бросался бы HTTP Exception
+        return  # type: ignore
 
 
 def delete(book_data: DeleteBookScheme) -> None:
@@ -135,6 +149,9 @@ def delete(book_data: DeleteBookScheme) -> None:
 
     except ApplicationException as e:
         logger.error(e.message)
+        # Делается с той целью, чтобы не легло консольное приложение.
+        # Если бы была возможность использовать FastAPI, то здесь бросался бы HTTP Exception
+        return  # type: ignore
 
 
 if __name__ == '__main__':

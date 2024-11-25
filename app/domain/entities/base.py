@@ -1,13 +1,13 @@
 from abc import ABC
 from dataclasses import asdict, dataclass, field
-from typing import Any, Dict, Optional, Set
+from typing import Any, Dict, Optional, Set, override
 from uuid import uuid4
 
 
 @dataclass(eq=False)
 class BaseEntity(ABC):
     """
-    Base model, from which any domain model should be inherited.
+    Base entity, from which any domain model should be inherited.
     """
     oid: str = field(default_factory=lambda: str(uuid4()), kw_only=True)
 
@@ -18,7 +18,7 @@ class BaseEntity(ABC):
     ) -> Dict[str, Any]:
 
         """
-        Create a dictionary representation of the model.
+        Create a dictionary representation of the entity.
 
         exclude: set of model fields, which should be excluded from dictionary representation.
         include: set of model fields, which should be included into dictionary representation.
@@ -37,7 +37,7 @@ class BaseEntity(ABC):
 
         return data
 
-    def __eq__(self, other: "BaseEntity") -> bool:
+    def __eq__(self, other: object) -> bool:
         if not isinstance(other, BaseEntity):
             raise NotImplementedError
         return self.oid == other.oid

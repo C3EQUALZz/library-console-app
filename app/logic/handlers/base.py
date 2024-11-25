@@ -7,6 +7,9 @@ from app.logic.events.base import AbstractEvent
 
 
 class AbstractHandler(ABC):
+    """
+    Abstract event handler class, from which every event handler should be inherited from.
+    """
 
     @abstractmethod
     def __init__(self, uow: AbstractUnitOfWork) -> None:
@@ -21,6 +24,7 @@ class AbstractEventHandler(AbstractHandler, ABC):
     @abstractmethod
     def __call__(self, event: AbstractEvent) -> None:
         raise NotImplementedError
+
 
 
 class AbstractCommandHandler(AbstractHandler, ABC):

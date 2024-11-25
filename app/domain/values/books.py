@@ -15,7 +15,7 @@ class Title(BaseValueObject):
     value: str
 
     @override
-    def validate(self) -> NoReturn:
+    def validate(self) -> None:
         if not self.value:
             raise EmptyTextException()
 
@@ -35,7 +35,7 @@ class Author(BaseValueObject):
                r'?)|([A-Z][a-z]+(-[A-Z][a-z]+)?\s+([A-Z][a-z]+(-[A-Z][a-z]+)?)(\s+[A-Z][a-z]+(-[A-Z][a-z]+)?)?)$')
 
     @override
-    def validate(self) -> NoReturn:
+    def validate(self) -> None:
         if not self.value:
             raise EmptyTextException()
 
@@ -55,7 +55,7 @@ class Year(BaseValueObject):
     value: int
 
     @override
-    def validate(self) -> NoReturn:
+    def validate(self) -> None:
         if self.value < 1000 or self.value > datetime.today().year:
             raise FakeYearException(self.value)
 
@@ -69,7 +69,7 @@ class Status(BaseValueObject):
     value: str
 
     @override
-    def validate(self) -> NoReturn:
+    def validate(self) -> None:
         if not self.value:
             raise EmptyTextException()
 

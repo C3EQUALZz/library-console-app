@@ -12,12 +12,16 @@ from app.logic.handlers.books.base import BooksCommandHandler
 
 
 class CreateBookCommandHandler(BooksCommandHandler):
+    """
+    Handler for creating a book which must be linked with CreateBookCommand in app/logic/handlers/__init__
+    """
+
     def __call__(self, command: CreateBookCommand) -> Book:
         """
         Create a new book, if book with provided credentials doesn't exist, and creates event signaling that
         operation was successfully executed.
-        :param command:
-        :return:
+        :param command: command to execute which must be linked in app/logic/handlers/__init__
+        :return: domain entity of the created book
         """
 
         books_service: BooksService = BooksService(uow=self._uow)
@@ -32,6 +36,12 @@ class CreateBookCommandHandler(BooksCommandHandler):
 
 class UpdateBookCommandHandler(BooksCommandHandler):
     def __call__(self, command: UpdateBookCommand) -> Book:
+        """
+        Updates a book, if book with provided credentials exist, and updates event signaling that
+        operation was successfully executed. In other case raises BookNotExistsException.
+        :param command: command to execute which must be linked in app/logic/handlers/__init__
+        :return: domain entity of the updated book
+        """
         books_service: BooksService = BooksService(uow=self._uow)
 
         if not books_service.check_existence(title=command.title):
@@ -44,6 +54,11 @@ class UpdateBookCommandHandler(BooksCommandHandler):
 
 class DeleteBookCommandHandler(BooksCommandHandler):
     def __call__(self, command: DeleteBookCommand) -> None:
+        """
+        Deletes a book, if book with provided credentials exist. In other case raises BookNotExistsException.
+        :param command: command to execute which must be linked in app/logic/handlers/__init__
+        :return: nothing
+        """
         books_service: BooksService = BooksService(uow=self._uow)
 
         if not books_service.check_existence(title=command.title):
@@ -56,6 +71,11 @@ class DeleteBookCommandHandler(BooksCommandHandler):
 
 class GetBookByIdCommandHandler(BooksCommandHandler):
     def __call__(self, command: GetBookByIdCommand) -> Optional[Book]:
+        """
+
+        :param command:
+        :return:
+        """
         books_service: BooksService = BooksService(uow=self._uow)
         book = books_service.get_by_id(command.book_id)
         if not book:

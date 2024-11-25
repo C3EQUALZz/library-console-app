@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
 from typing import List, Optional
 
 from app.domain.entities.base import BaseEntity
@@ -7,8 +6,7 @@ from app.domain.entities.books import Book
 from app.infrastructure.repositories.base import AbstractRepository
 
 
-@dataclass
-class BooksRepository(AbstractRepository, ABC):
+class BooksRepository(AbstractRepository[Book], ABC):
     """
     An interface for work with books, that is used by books unit of work.
     The main goal is that implementations of this interface can be easily replaced in users unit of work

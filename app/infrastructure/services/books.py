@@ -24,6 +24,7 @@ class BooksService:
             oid: Optional[str] = None,
             title: Optional[str] = None
     ) -> bool:
+
         if not (oid or title):
             return False
 
@@ -39,7 +40,12 @@ class BooksService:
 
     def get_by_title(self, title: str) -> Book:
         with self._uow as uow:
-            return uow.books.get_by_title(title)
+            existing_book = uow.books.get_by_title(title)
+
+            if not existing_book:
+                raise BookNotFoundException(title)
+
+            return existing_book
 
     def get_by_title_and_author(self, title: str, author: str) -> Book:
         with self._uow as uow:

@@ -63,6 +63,9 @@ class UpdateBookCommandHandler(BooksCommandHandler[UpdateBookCommand]):
 
 
 class DeleteBookCommandHandler(BooksCommandHandler[DeleteBookCommand]):
+    """
+    Handler for deleting a book which must be linked with DeleteBookCommand in app/logic/handlers/__init__
+    """
     def __call__(self, command: DeleteBookCommand) -> None:
         """
         Deletes a book, if book with provided credentials exist. In other case raises BookNotExistsException.
@@ -82,9 +85,9 @@ class DeleteBookCommandHandler(BooksCommandHandler[DeleteBookCommand]):
 class GetBookByIdCommandHandler(BooksCommandHandler[GetBookByIdCommand]):
     def __call__(self, command: GetBookByIdCommand) -> Optional[Book]:
         """
-
-        :param command:
-        :return:
+        Gets book by UUID, if book with provided credentials exist. In other case raises BookNotExistsException.
+        :param command: command to execute which must be linked in app/logic/handlers/__init__
+        :return: domain entity of the book
         """
         books_service: BooksService = BooksService(uow=self._uow)
         book = books_service.get_by_id(command.book_id)

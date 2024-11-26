@@ -189,7 +189,7 @@ class SQLAlchemyUsersRepository(SQLAlchemyAbstractRepository[Book], BooksReposit
 Название паттерна `Unit of Work` намекает на его задачу управлять атомарностью операций. 
 В моем случае относительного тестового у меня есть [`JsonAbstractUnitOfWork`](app/infrastructure/uow/books/jsonr.py), который описывает логику работы `Unit Of Work` для сохранения в `json`.
 
-> [IMPORTANT!]
+> [!IMPORTANT]
 > Автор осведомлен об отсутствии транзакций для сохранения в файлы `json`, `csv`. Такой подход был выбран с той целью, чтобы можно было с легкостью заменить на `SQL` БД в будущем.
 
 Приведу пример того, как написать свой `Unit of Work` для книг, используя [`SQLAlchemy`](https://www.sqlalchemy.org/)

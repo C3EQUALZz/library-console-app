@@ -47,17 +47,17 @@
 
 ## Принцип реализации
 
-В проекте используется архитектурный подход [DDD](https://en.wikipedia.org/wiki/Domain-driven_design) и [EDD](https://en.wikipedia.org/wiki/Event-driven_programming).
-За счет чего данное приложение можно с легкостью интегрировать с [FastAPI](https://fastapi.tiangolo.com/), [Flask](https://flask.palletsprojects.com/en/stable/), так как логика кода построена на ванильном [Python](https://www.python.org/doc/).
+В проекте используется архитектурный подход [`DDD`](https://en.wikipedia.org/wiki/Domain-driven_design) и [`EDD`](https://en.wikipedia.org/wiki/Event-driven_programming).
+За счет чего данное приложение можно с легкостью интегрировать с [`FastAPI`](https://fastapi.tiangolo.com/), [`Flask`](https://flask.palletsprojects.com/en/stable/), так как логика кода построена на ванильном [`Python 3.12`](https://www.python.org/doc/).
 
 # Зависимости
 
 В проекте используются следующие зависимости: 
-- [poetry](https://python-poetry.org/)
-- [pytest](https://docs.pytest.org/en/stable/)
-- [mypy](https://www.mypy-lang.org/)
-- [ruff](https://docs.astral.sh/ruff/linter/)
-- [isort](https://pycqa.github.io/isort/)
+- [`poetry`](https://python-poetry.org/)
+- [`pytest`](https://docs.pytest.org/en/stable/)
+- [`mypy`](https://www.mypy-lang.org/)
+- [`ruff`](https://docs.astral.sh/ruff/linter/)
+- [`isort`](https://pycqa.github.io/isort/)
 
 > [!IMPORTANT]
 > Все зависимости можно найти в [`pyproject.toml`](pyproject.toml)
@@ -76,7 +76,7 @@
 
 ## Что такое `domain`? 
 
-В основе DDD - Домен (Domain). Это модель предмета и его задач, под которые строится приложение. Счет, который оплачиваем, Сообщение, которое отправляем, или Пользователь, которому выставляем оценку. Домены строятся на сущностях из реального мира и ложатся в центр приложения. 
+В основе `DDD` - Домен (Domain). Это модель предмета и его задач, под которые строится приложение. Счет, который оплачиваем, Сообщение, которое отправляем, или Пользователь, которому выставляем оценку. Домены строятся на сущностях из реального мира и ложатся в центр приложения. 
 
 > [!IMPORTANT]
 > Например, по заданию у нас библиотека, где нужно оперировать книгами, поэтому `domain` - это книга. 
@@ -86,8 +86,8 @@
 
 Там вы найдете 2 директории, которые вас должны заинтересовать `entity` и `values`. 
 
-- `entities` - это и есть наши домены, про которые я говорил выше. Пример домена книги можете увидеть [здесь](app/domain/entities/books.py)
-- `values` - здесь находятся, так называемые, `value objects`. Грубо говоря, это характеристики нашего домена, т.е поля (атрибуты) `domain`. Почему делается так? Все очень просто: для валидации данных. Пример value objects для книги [здесь](https://github.com/C3EQUALZz/library-console-app/blob/master/app/domain/values/books.py)
+- [`entities`](https://blog.jannikwempe.com/domain-driven-design-entities-value-objects) - это и есть наши домены, про которые я говорил выше. Пример домена книги можете увидеть [здесь](app/domain/entities/books.py)
+- [`values`](https://blog.jannikwempe.com/domain-driven-design-entities-value-objects) - здесь находятся, так называемые, `value objects`. Грубо говоря, это характеристики нашего домена, т.е поля (атрибуты) `domain`. Почему делается так? Все очень просто: для валидации данных. Пример value objects для книги [здесь](https://github.com/C3EQUALZz/library-console-app/blob/master/app/domain/values/books.py)
 
 > [!NOTE]
 > Если Вы хотите добавить новый `domain`, то создайте `Python` файл, который описывает его. Например, `peoples.py`. Ваш класс должен наследоваться от [`BaseEntity`](app/domain/entities/base.py). Пример прилагаю ниже: 

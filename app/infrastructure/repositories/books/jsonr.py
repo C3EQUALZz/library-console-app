@@ -5,11 +5,9 @@ from typing import (
     override,
 )
 
-from app.domain.entities.base import BaseEntity
 from app.domain.entities.books import Book
 from app.infrastructure.exceptions import (
     BookNotFoundException,
-    InstanceException,
 )
 from app.infrastructure.repositories.base import AbstractRepository, BaseEntityType
 from app.infrastructure.repositories.books.base import BooksRepository
@@ -24,58 +22,44 @@ class JsonAbstractRepository(AbstractRepository[BaseEntityType], ABC):
         self._session = session
 
 
-class JsonBooksRepository(JsonAbstractRepository, BooksRepository):
+class JsonBooksRepository(JsonAbstractRepository[Book], BooksRepository):
     @override
-    def __init__(self, session: List) -> None:
+    def __init__(self, session: List[Book]) -> None:
         super().__init__(session)
 
     @override
     def get_by_title(self, title: str) -> Optional[Book]:
-        for item in self._session:
-            if item["title"] == title:
-                return Book(**item)
-        return None
+        return next((book for book in self._session if book.title == title), None)
 
     @override
     def get_by_title_and_author(self, title: str, author: str) -> Optional[Book]:
-        for item in self._session:
-            if item["title"] == title and item["author"] == author:
-                return Book(**item)
-        return None
+        return next((book for book in self._session if book.title == title and book.author == author), None)
 
     @override
-    def add(self, model: BaseEntity) -> Book:
-        if not isinstance(model, Book):
-            raise InstanceException("Only Book instances can be added to the repository.")
-        book_data = model.__dict__
-        self._session.append(book_data)
+    def add(self, model: Book) -> Book:
+        self._session.append(model)
         return model
 
     @override
     def get(self, oid: str) -> Optional[Book]:
-        for item in self._session:
-            if item["oid"] == oid:
-                return Book(**item)
-        return None
+        return next((book for book in self._session if book.oid == oid), None)
 
     @override
-    def update(self, oid: str, model: BaseEntity) -> Book:
-        if not isinstance(model, Book):
-            raise InstanceException("Only Book instances can be updated in the repository.")
-        for idx, item in enumerate(self._session):
-            if item["oid"] == str(oid):
-                self._session[idx] = model.__dict__
+    def update(self, oid: str, model: Book) -> Book:
+        for idx, book in enumerate(self._session):
+            if book.oid == oid:
+                self._session[idx] = model
                 return model
         raise BookNotFoundException(oid)
 
     @override
     def delete(self, oid: str) -> None:
-        for idx, item in enumerate(self._session):
-            if item["oid"] == str(oid):
+        for idx, book in enumerate(self._session):
+            if book.oid == oid:
                 del self._session[idx]
                 return
         raise BookNotFoundException(oid)
 
     @override
     def list(self) -> List[Book]:
-        return [Book(**item) for item in self._session]
+        return self._session

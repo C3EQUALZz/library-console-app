@@ -1,7 +1,6 @@
 import json
 import os
 from pathlib import Path
-
 from typing import (
     List,
     override,
@@ -19,44 +18,48 @@ from app.settings.config import settings
 
 class JsonAbstractUnitOfWork(AbstractUnitOfWork):
     """
-    Unit of work interface for SQLAlchemy, from which should be inherited all other units of work,
-    which would be based on SQLAlchemy logics.
+    Unit of work interface for Json, from which should be inherited all other units of work.
     """
 
     @override
     def __init__(self, file_path: os.PathLike[str] | str = settings.path_to_database_json_file) -> None:
         super().__init__()
 
-        self._data: List[Book] = []
+        self._data: List[Book] = []  # Хранилище объектов
         self._file_path = Path(file_path)
-        self._backup: str = ""
+        self._backup: List[Book] = []
 
     @override
     def __enter__(self) -> Self:
-        if self._file_path.exists() and self._file_path.is_file():
-            with open(self._file_path, "r", encoding="utf-8") as f:
-                self._data = json.load(f)
-        else:
-            self._data = []
-
-        self._backup = json.dumps(self._data)
+        self._data = self.__load()
+        self._backup = self._data.copy()
 
         return super().__enter__()
 
     @override
     def __exit__(self, *args: tuple[Any, ...], **kwargs: dict[str, Any]) -> None:
-        if self._data != json.loads(self._backup):
+        if self._data != self._backup:
             self.commit()
         super().__exit__(*args, **kwargs)
 
     @override
     def commit(self) -> None:
         with open(self._file_path, "w", encoding="utf-8") as f:
-            json.dump(self._data, f, ensure_ascii=False, indent=4)
+            json.dump([book.to_dict() for book in self._data], f, ensure_ascii=False, indent=4)
 
     @override
     def rollback(self) -> None:
-        self._data = json.loads(self._backup)
+        self._data = self._backup.copy()
+
+    def __load(self) -> List[Book]:
+        """
+        Приватный метод для загрузки данных из файла и преобразования их в объекты Book.
+        """
+        if self._file_path.exists() and self._file_path.is_file():
+            with open(self._file_path, "r", encoding="utf-8") as f:
+                raw_data = json.load(f)
+                return [Book(**item) for item in raw_data]
+        return []
 
 
 class JsonBooksUnitOfWork(JsonAbstractUnitOfWork, BooksUnitOfWork):

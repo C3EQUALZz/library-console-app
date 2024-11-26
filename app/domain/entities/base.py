@@ -22,7 +22,7 @@ class BaseEntity(ABC):
 
     oid: str = field(default_factory=lambda: str(uuid4()), kw_only=True)
 
-    async def to_dict(
+    def to_dict(
         self, exclude: Optional[Set[str]] = None, include: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """

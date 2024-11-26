@@ -28,7 +28,7 @@ class BooksRepository(AbstractRepository[Book], ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def add(self, model: BaseEntity) -> Book:
+    def add(self, model: Book) -> Book:
         raise NotImplementedError
 
     @abstractmethod
@@ -36,7 +36,7 @@ class BooksRepository(AbstractRepository[Book], ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def update(self, oid: str, model: BaseEntity) -> Book:
+    def update(self, oid: str, model: Book) -> Book:
         raise NotImplementedError
 
     @abstractmethod

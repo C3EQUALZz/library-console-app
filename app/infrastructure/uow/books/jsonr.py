@@ -63,6 +63,10 @@ class JsonAbstractUnitOfWork(AbstractUnitOfWork):
 
 
 class JsonBooksUnitOfWork(JsonAbstractUnitOfWork, BooksUnitOfWork):
+    """
+    Implementation of json book uow.
+    Here you must add only repositories for work
+    """
     def __enter__(self) -> Self:
         uow = super().__enter__()
         self.books: BooksRepository = JsonBooksRepository(session=self._data)

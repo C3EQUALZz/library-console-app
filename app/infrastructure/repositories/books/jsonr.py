@@ -29,11 +29,14 @@ class JsonBooksRepository(JsonAbstractRepository[Book], BooksRepository):
 
     @override
     def get_by_title(self, title: str) -> Optional[Book]:
-        return next((book for book in self._session if book.title == title), None)
+        return next((book for book in self._session if book.title.as_generic_type() == title), None)
 
     @override
     def get_by_title_and_author(self, title: str, author: str) -> Optional[Book]:
-        return next((book for book in self._session if book.title == title and book.author == author), None)
+        return next((book for book in self._session if
+                     book.title.as_generic_type() == title
+                     and
+                     book.author.as_generic_type() == author), None)
 
     @override
     def add(self, model: Book) -> Book:

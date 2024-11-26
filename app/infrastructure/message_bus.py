@@ -4,7 +4,7 @@ from typing import (
     Dict,
     List,
     Type,
-    Union,
+    Union, TypeVar,
 )
 
 from app.infrastructure.exceptions import MessageBusMessageException
@@ -14,19 +14,23 @@ from app.logic.events.base import AbstractEvent
 from app.logic.handlers.base import (
     AbstractCommandHandler,
     AbstractEventHandler,
+    AbstractHandler,
 )
 
+ET = TypeVar("ET", bound=AbstractEvent)
+CT = TypeVar("CT", bound=AbstractCommand)
+HT = TypeVar("HT", bound=AbstractHandler)
 
 class MessageBus:
     def __init__(
         self,
         uow: AbstractUnitOfWork,
-        event_handlers: Dict[Type[AbstractEvent], List[AbstractEventHandler]],
-        command_handlers: Dict[Type[AbstractCommand], AbstractCommandHandler],
+        event_handlers: Dict[Type[ET], List[AbstractEventHandler[ET]]],
+        command_handlers: Dict[Type[CT], AbstractCommandHandler[CT]],
     ) -> None:
-        self._uow: AbstractUnitOfWork = uow
-        self._event_handlers: Dict[Type[AbstractEvent], List[AbstractEventHandler]] = event_handlers
-        self._command_handlers: Dict[Type[AbstractCommand], AbstractCommandHandler] = command_handlers
+        self._uow = uow
+        self._event_handlers = event_handlers
+        self._command_handlers = command_handlers
         self._queue: Queue = Queue()
         self._command_result: Any = None
 
@@ -41,14 +45,13 @@ class MessageBus:
             else:
                 raise MessageBusMessageException()
 
-    def _handle_event(self, event: AbstractEvent) -> None:
-        handler: AbstractEventHandler
+    def _handle_event(self, event: ET) -> None:
         for handler in self._event_handlers[type(event)]:
             handler(event)
             for event in self._uow.get_events():
                 self._queue.put_nowait(event)
 
-    def _handle_command(self, command: AbstractCommand) -> None:
+    def _handle_command(self, command: CT) -> None:
         handler: AbstractCommandHandler = self._command_handlers[type(command)]
         self._command_result = handler(command)
         for event in self._uow.get_events():

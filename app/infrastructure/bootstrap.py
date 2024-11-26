@@ -6,7 +6,7 @@ from typing import (
     List,
     Optional,
     Type,
-    Union,
+    TypeVar,
 )
 
 from app.infrastructure.message_bus import MessageBus
@@ -15,9 +15,12 @@ from app.logic.commands.base import AbstractCommand
 from app.logic.events.base import AbstractEvent
 from app.logic.handlers.base import (
     AbstractCommandHandler,
-    AbstractEventHandler,
+    AbstractEventHandler, AbstractHandler,
 )
 
+ET = TypeVar("ET", bound=AbstractEvent)
+CT = TypeVar("CT", bound=AbstractCommand)
+HT = TypeVar("HT", bound=AbstractHandler)
 
 class Bootstrap:
     """
@@ -25,20 +28,16 @@ class Bootstrap:
     """
 
     def __init__(
-        self,
-        uow: AbstractUnitOfWork,
-        events_handlers_for_injection: Dict[Type[AbstractEvent], List[Type[AbstractEventHandler]]],
-        commands_handlers_for_injection: Dict[Type[AbstractCommand], Type[AbstractCommandHandler]],
-        dependencies: Optional[Dict[str, Any]] = None,
+            self,
+            uow: AbstractUnitOfWork,
+            events_handlers_for_injection: Dict[Type[ET], List[Type[AbstractEventHandler[ET]]]],
+            commands_handlers_for_injection: Dict[Type[CT], Type[AbstractCommandHandler[CT]]],
+            dependencies: Optional[Dict[str, Any]] = None,
     ) -> None:
-        self._uow: AbstractUnitOfWork = uow
+        self._uow = uow
         self._dependencies: Dict[str, Any] = {"uow": self._uow}
-        self._events_handlers_for_injection: Dict[Type[AbstractEvent], List[Type[AbstractEventHandler]]] = (
-            events_handlers_for_injection
-        )
-        self._commands_handlers_for_injection: Dict[Type[AbstractCommand], Type[AbstractCommandHandler]] = (
-            commands_handlers_for_injection
-        )
+        self._events_handlers_for_injection = events_handlers_for_injection
+        self._commands_handlers_for_injection = commands_handlers_for_injection
 
         if dependencies:
             self._dependencies.update(dependencies)
@@ -49,12 +48,12 @@ class Bootstrap:
         after which returns messagebus instance.
         """
 
-        injected_event_handlers: Dict[Type[AbstractEvent], List[AbstractEventHandler]] = {
+        injected_event_handlers = {
             event_type: [self._inject_dependencies(handler=handler) for handler in event_handlers]
             for event_type, event_handlers in self._events_handlers_for_injection.items()
         }
 
-        injected_command_handlers: Dict[Type[AbstractCommand], AbstractCommandHandler] = {
+        injected_command_handlers = {
             command_type: self._inject_dependencies(handler=handler)
             for command_type, handler in self._commands_handlers_for_injection.items()
         }
@@ -66,8 +65,8 @@ class Bootstrap:
         )
 
     def _inject_dependencies(
-        self, handler: Union[Type[AbstractEventHandler], Type[AbstractCommandHandler]]
-    ) -> Union[AbstractEventHandler, AbstractCommandHandler]:
+            self, handler: Type[HT]
+    ) -> HT:
         """
         Inspecting handler to know its signature and init params, after which only necessary dependencies will be
         injected to the handler.

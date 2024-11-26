@@ -10,7 +10,7 @@ from app.application.api.books.handlers import (
     read_all_books
 )
 
-from app.settings.logger_config import setup_logging
+from app.settings.logger.config import setup_logging
 
 CHOICES_FOR_ACTION: Final[Tuple[str, ...]] = (
     "\n--- Menu of Library ---",
@@ -37,7 +37,7 @@ logger = logging.getLogger(__name__)
 def main() -> None:
     while True:
         for comment in CHOICES_FOR_ACTION:
-            logger.info(comment)
+            print(comment)
 
         choice = input("Select an action (1-6): ").strip()
 

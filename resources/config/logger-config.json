@@ -7,12 +7,24 @@
       "datefmt": "%Y-%m-%dT%H:%M:%S%z"
     }
   },
+  "filters": {
+    "info_only": {
+      "()": "app.settings.logger.filters.InfoFilter"
+    }
+  },
   "handlers": {
     "stderr": {
       "class": "logging.StreamHandler",
       "level": "WARNING",
       "formatter": "simple",
       "stream": "ext://sys.stderr"
+    },
+    "console": {
+      "class": "logging.StreamHandler",
+      "level": "INFO",
+      "formatter": "simple",
+      "stream": "ext://sys.stdout",
+      "filters": ["info_only"]
     },
     "file": {
       "class": "logging.handlers.RotatingFileHandler",
@@ -27,7 +39,8 @@
       "class": "logging.handlers.QueueHandler",
       "handlers": [
         "stderr",
-        "file_json"
+        "file_json",
+        "console"
       ],
       "respect_handler_level": true
   },
@@ -36,7 +49,8 @@
       "level": "DEBUG",
       "handlers": [
         "file",
-        "stderr"
+        "stderr",
+        "console"
       ]
     }
   }

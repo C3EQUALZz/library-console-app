@@ -108,7 +108,7 @@ class Human:
 
 ```python
 @dataclass(frozen=True)
-class Surname(BaseValueObject[str]):
+class NickName(BaseValueObject[str]):
     """
     Value object which associated with the book name
     """

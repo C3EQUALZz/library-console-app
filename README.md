@@ -203,13 +203,13 @@ class SQLAlchemyAbstractUnitOfWork(AbstractUnitOfWork):
     which would be based on SQLAlchemy logics.
     """
 
-    def __init__(self, session_factory: async_sessionmaker = default_session_factory) -> None:
+    def __init__(self, session_factory: sessionmaker = default_session_factory) -> None:
         super().__init__()
-        self._session_factory: async_sessionmaker = session_factory
+        self._session_factory: sessionmaker = session_factory
 
     def __enter__(self) -> Self:
-        self._session: AsyncSession = self._session_factory()
-        return await super().__aenter__()
+        self._session: Session = self._session_factory()
+        return super().__aenter__()
 
     def __exit__(self, *args, **kwargs) -> None:
         super().__exit__(*args, **kwargs)
@@ -225,7 +225,7 @@ class SQLAlchemyAbstractUnitOfWork(AbstractUnitOfWork):
 
 class SQLAlchemyBooksUnitOfWork(SQLAlchemyAbstractUnitOfWork, BooksUnitOfWork):
 
-    async def __aenter__(self) -> Self:
+    def __enter__(self) -> Self:
         uow = super().__enter__()
         self.books: BooksRepository = SQLAlchemyBooksRepository(session=self._session)
         return uow

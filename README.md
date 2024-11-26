@@ -262,7 +262,7 @@ class PeopleService:
             if oid and uow.people.get(oid):
                 return True
 
-            if title and uow.books.get_by_email(email):
+            if title and uow.people.get_by_email(email):
                 return True
 
         return False
@@ -273,5 +273,11 @@ class PeopleService:
 Здесь на данном слое собрана вся бизнес логика, где требуется реализовать наш функционал по тз. 
 В `logic` у нас есть `commands` и `events`. 
 
+# Запуск
+
+Точка запуска приложения находится [`здесь`](app/main.py).
+
+> [WARNING!]
+> Автор прекрасно осведомлен, что здесь нарушается `Open Closed` принцип из [`SOLID`](https://ru.wikipedia.org/wiki/SOLID_(%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5)), так как нужно постоянно исправлять старый код (дописывать новый ключ словаря и значение - функция из `handlers.py`) но у автора нет времени, чтобы писать штуку, которая будет сканировать `handlers` и автоматически добавлять новые (я имею ввиду аналогию с `Dispatcher`) ручки в мои зависимости, как это, например, реализовано в Java Spring.
 
 

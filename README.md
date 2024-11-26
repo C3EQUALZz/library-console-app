@@ -84,7 +84,7 @@
 
 ### Что там находится внутри директории `domain`?
 
-Там вы найдете 2 директории, которые вас должны заинтересовать `entity` и `values`. 
+Там Вы найдете 2 директории, которые Вас должны заинтересовать `entities` и `values`. 
 
 - [`entities`](https://blog.jannikwempe.com/domain-driven-design-entities-value-objects) - это и есть наши домены, про которые я говорил выше. Пример домена книги можете увидеть [здесь](app/domain/entities/books.py)
 - [`values`](https://blog.jannikwempe.com/domain-driven-design-entities-value-objects) - здесь находятся, так называемые, `value objects`. Грубо говоря, это характеристики нашего домена, т.е поля (атрибуты) `domain`. Почему делается так? Все очень просто: для валидации данных. Пример value objects для книги [здесь](https://github.com/C3EQUALZz/library-console-app/blob/master/app/domain/values/books.py)
@@ -129,7 +129,7 @@ class NickName(BaseValueObject[str]):
 
 ## Что такое `application`?
 
-Здесь обычно содержится `api` для работы с приложением. Различные backend endpoints, sockets и т.п. 
+Здесь обычно содержится `api` для работы с приложением. Различные [backend endpoints](https://dev.to/apidna/api-endpoints-a-beginners-guide-ief), [sockets](https://ru.wikipedia.org/wiki/%D0%A1%D0%BE%D0%BA%D0%B5%D1%82_(%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%BD%D1%8B%D0%B9_%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B9%D1%81)) и т.п. 
 Каждая директория в `api` - это handlers для сущности (домен), с которой мы работаем.
 
 > [!NOTE]
@@ -138,11 +138,65 @@ class NickName(BaseValueObject[str]):
 
 ### Что за файлы в `application/api/{domain}`?
 
-- `dependencies.py` - здесь находится логика, к которой должны обращаться handlers, чтобы выполнить определенные бизнес задачи. Делается с той целью, чтобы было минимальное количество кода в handlers. Пример для книги [`dependencies.py`](app/application/api/books/dependecies.py)
+- `dependencies.py` - здесь находится логика, к которой должны обращаться `handlers`, чтобы выполнить определенные бизнес задачи. Делается с той целью, чтобы было минимальное количество кода в handlers. Пример для книги [`dependencies.py`](app/application/api/books/dependecies.py)
 - `handlers.py` - здесь находится та часть, которая выступает "мордой" нашего приложения. В данном случае здесь находятся функции, которые запрашивают данные от пользователя и запускают определенные функции из `dependencies.py`. Например, здесь могут уже находиться ручки `FastAPI`, которые в свою очередь вызывают через [`Depends`](https://fastapi.tiangolo.com/tutorial/dependencies/) определенные функции из `dependencies.py`. Пример для книги [`handlers.py`](app/application/api/books/handlers.py)
-- `schemas.py` - здесь находятся схемы валидации данных или просто [DTO](https://ru.wikipedia.org/wiki/DTO). В реальных кейсах используются [pydantic BaseModel](https://docs.pydantic.dev/latest/api/base_model/) для валидации данных. Пример для книги [`schemas.py`](app/application/api/books/schemas.py)
+- `schemas.py` - здесь находятся схемы валидации данных или просто [`DTO`](https://ru.wikipedia.org/wiki/DTO). В реальных кейсах используются [`pydantic BaseModel`](https://docs.pydantic.dev/latest/api/base_model/) для валидации данных. Пример для книги [`schemas.py`](app/application/api/books/schemas.py)
 
+## Что такое `infrastrucutre`?
 
+На данном слое архитектуры реализована логика работы с данными посредством следующих паттернов:
+ 
+- [`Unit Of Work`](https://qna.habr.com/q/574561)
+- [`Repository`](https://www.cosmicpython.com/book/chapter_02_repository.html), 
+- [`Service`](https://lyz-code.github.io/blue-book/architecture/service_layer_pattern/)
+- [`Message Bus`](https://dev.to/billy_de_cartel/a-beginners-guide-to-understanding-message-bus-architecture-22ec)
+- [`Dependecy Injection`](https://thinhdanggroup.github.io/python-dependency-injection/)
+
+### Что там находится внутри директории `infrastrucutre`?
+
+Здесь вы найдете директории и `Python` файлы для описания работ. Каждая директория также называется, как и паттерн, которые я указал выше. Давайте рассмотрим каждый из них по отдельности.  
+
+#### Repository
+
+Здесь реализована логика работы с базой данных на уровне объектов. Репозиторий управляет коллекцией доменов (моделей).
+В случае данного тестового задания написана одна имплементация для работы с [книгами относительно JSON](app/infrastructure/repositories/books/jsonr.py).
+
+Как можно написать свой репозиторий? Все очень просто: Вам нужно унаследоваться от интерфейса, который описывает ваш домен.
+Пример интерфейса для репозитория управления с книгами можете увидеть [здесь](app/infrastructure/repositories/books/base.py).
+Например, я приведу реализацию `SQLAlchemyBookRepository`, где используется библиотека [`SQLAlchemy`](https://www.sqlalchemy.org/)
+
+```python
+class SQLAlchemyUsersRepository(SQLAlchemyAbstractRepository[Book], BooksRepository):
+
+    def get(self, id: int) -> Optional[Book]:
+        result: Result = self._session.execute(select(Book).filter_by(id=id))
+        return result.scalar_one_or_none()
+
+    def get_by_title(self, title: str) -> Optional[Book]:
+        result: Result = self._session.execute(select(Book).filter_by(title=title))
+        return result.scalar_one_or_none()
+
+    def add(self, model: Book) -> Book:
+        result: Result = self._session.execute(
+            insert(Book).values(**await model.to_dict(exclude={'oid'})).returning(Book)
+        )
+
+        return result.scalar_one()
+```
+
+#### Unit Of Work
+
+Название паттерна `Unit of Work` намекает на его задачу управлять атомарностью операций. 
+В моем случае относительного тестового у меня есть [`JsonAbstractUnitOfWork`](app/infrastructure/uow/books/jsonr.py), который описывает логику работы `Unit Of Work` для сохранения в `json`.
+
+> [IMPORTANT!]
+> Автор осведомлен об отсутствии транзакций для сохранения в файлы `json`, `csv`. Такой подход был выбран с той целью, чтобы можно было с легкостью заменить на `SQL` БД в будущем.
+
+Приведу пример того, как написать свой `Unit of Work` для книг, используя [`SQLAlchemy`](https://www.sqlalchemy.org/)
+
+```python
+
+```
 
 
 

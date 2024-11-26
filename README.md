@@ -163,7 +163,9 @@ class NickName(BaseValueObject[str]):
 
 Как можно написать свой репозиторий? Все очень просто: Вам нужно унаследоваться от интерфейса, который описывает ваш домен.
 Пример интерфейса для репозитория управления с книгами можете увидеть [здесь](app/infrastructure/repositories/books/base.py).
-Например, я приведу реализацию `SQLAlchemyBookRepository`, где используется библиотека [`SQLAlchemy`](https://www.sqlalchemy.org/)
+
+Например, я приведу реализацию `SQLAlchemyBookRepository`, где используется библиотека [`SQLAlchemy`](https://www.sqlalchemy.org/).
+Создайте [здесь] файл `alchemy.py`, вписав код, который ниже. 
 
 ```python
 class SQLAlchemyUsersRepository(SQLAlchemyAbstractRepository[Book], BooksRepository):
@@ -192,13 +194,84 @@ class SQLAlchemyUsersRepository(SQLAlchemyAbstractRepository[Book], BooksReposit
 > [!IMPORTANT]
 > Автор осведомлен об отсутствии транзакций для сохранения в файлы `json`, `csv`. Такой подход был выбран с той целью, чтобы можно было с легкостью заменить на `SQL` БД в будущем.
 
-Приведу пример того, как написать свой `Unit of Work` для книг, используя [`SQLAlchemy`](https://www.sqlalchemy.org/)
+Приведу пример того, как написать свой `Unit of Work` для книг, используя [`SQLAlchemy`](https://www.sqlalchemy.org/). Создайте файл в [данной директории](app/infrastructure/uow/books), назвав его, например, `alchemy.py`
 
 ```python
+class SQLAlchemyAbstractUnitOfWork(AbstractUnitOfWork):
+    """
+    Unit of work interface for SQLAlchemy, from which should be inherited all other units of work,
+    which would be based on SQLAlchemy logics.
+    """
 
+    def __init__(self, session_factory: async_sessionmaker = default_session_factory) -> None:
+        super().__init__()
+        self._session_factory: async_sessionmaker = session_factory
+
+    def __enter__(self) -> Self:
+        self._session: AsyncSession = self._session_factory()
+        return await super().__aenter__()
+
+    def __exit__(self, *args, **kwargs) -> None:
+        super().__exit__(*args, **kwargs)
+        self._session.close()
+
+    def commit(self) -> None:
+        self._session.commit()
+
+    def rollback(self) -> None:
+        self._session.expunge_all()
+        self._session.rollback()
+
+
+class SQLAlchemyBooksUnitOfWork(SQLAlchemyAbstractUnitOfWork, BooksUnitOfWork):
+
+    async def __aenter__(self) -> Self:
+        uow = super().__enter__()
+        self.books: BooksRepository = SQLAlchemyBooksRepository(session=self._session)
+        return uow
 ```
 
+### Service
 
+Здесь агрегируется логика `UoW` и `Repository`. Именно из-под данного слоя идет работа с данными уже для обращения в командах.
+Сервисы всегда пишутся на ванильном Python (как я вижу в примерах), так что здесь имеет смысл писать новый сервис, если добавилась новая сущность в проект.  
+Пример сервиса для книг можете увидеть [здесь](app/infrastructure/services). 
+
+Приведу пример того, как написать новый сервис, если появилась сущность (домен) `Human`
+
+```python
+class PeopleService:
+    """
+    Service layer core according to DDD, which using a unit of work, will perform operations on the domain model.
+    """
+
+    def __init__(self, uow: PeopleUnitOfWork) -> None:
+        self._uow = uow
+
+    def add(self, book: Human) -> Human:
+        with self._uow as uow:
+            new_human = uow.people.add(model=human)
+            uow.commit()
+            return new_human
+
+    def check_existence(self, oid: Optional[str] = None, email: Optional[str] = None) -> bool:
+        if not (oid or email):
+            return False
+
+        with self._uow as uow:
+            if oid and uow.people.get(oid):
+                return True
+
+            if title and uow.books.get_by_email(email):
+                return True
+
+        return False
+```
+
+## Что такое `logic`?
+
+Здесь на данном слое собрана вся бизнес логика, где требуется реализовать наш функционал по тз. 
+В `logic` у нас есть `commands` и `events`. 
 
 
 

@@ -17,12 +17,23 @@ class BooksService:
         self._uow = uow
 
     def add(self, book: Book) -> Book:
+        """
+        Service method which adds a book in our database
+        :param book: new book (domain object)
+        :return: domain object if it was successfully added
+        """
         with self._uow as uow:
             new_book = uow.books.add(model=book)
             uow.commit()
             return new_book
 
     def check_existence(self, oid: Optional[str] = None, title: Optional[str] = None) -> bool:
+        """
+        Service method which checks if a book exists in our database
+        :param oid: unique identifier for the book
+        :param title: name of the book
+        :return: True if the book exists, False otherwise
+        """
         if not (oid or title):
             return False
 
@@ -36,6 +47,11 @@ class BooksService:
         return False
 
     def get_by_title(self, title: str) -> Book:
+        """
+        Service method which gets a book by its title
+        :param title: name of the book
+        :return: books if the book was found, otherwise raises BookNotFoundException
+        """
         with self._uow as uow:
             existing_book = uow.books.get_by_title(title)
 
@@ -45,6 +61,12 @@ class BooksService:
             return existing_book
 
     def get_by_title_and_author(self, title: str, author: str) -> Book:
+        """
+        Service method which gets a book by its title and author
+        :param title: name of the book
+        :param author: author of the book
+        :return: books if the book was found, otherwise raises BookNotFoundException
+        """
         with self._uow as uow:
             existing_book = uow.books.get_by_title_and_author(title, author)
 
@@ -68,14 +90,10 @@ class BooksService:
 
     def update(self, book: Book) -> Book:
         with self._uow as uow:
-            existing_book = uow.books.get_by_title_and_author(
-                title=book.title.as_generic_type(), author=book.author.as_generic_type()
-            )
+            existing_book = uow.books.get(oid=book.oid)
 
             if not existing_book:
-                raise BookNotFoundException(
-                    f"with title: {book.title.as_generic_type()}," f" author: {book.author.as_generic_type()}"
-                )
+                raise BookNotFoundException(book.oid)
 
             updated_book = uow.books.update(oid=existing_book.oid, model=book)
             uow.commit()

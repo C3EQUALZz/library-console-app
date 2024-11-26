@@ -120,6 +120,8 @@ def update(book_data: UpdateBookScheme) -> Book:
 
         messagebus.handle(UpdateBookCommand(**book_data.model_dump()))
 
+        logger.info("Successfully updated book [%s]", messagebus.command_result)
+
         return messagebus.command_result
 
     except ApplicationException as e:

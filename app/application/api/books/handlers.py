@@ -15,14 +15,16 @@ from app.application.api.books.dependecies import (
     create,
     delete,
     read,
-    read_all
+    read_all,
+    update
 )
 
 from app.application.api.books.schemas import (
     CreateBookScheme,
     DeleteBookScheme,
     ReadBookScheme,
-    ReadAllBookScheme
+    ReadAllBookScheme,
+    UpdateBookScheme
 )
 
 
@@ -45,7 +47,19 @@ def update_book() -> None:
     """
     Function that associated with handler update book
     """
-    print("Обновляю книгу")
+    oid = input("Please input the id of the book: ")
+    author = input("Please write new name of the author: ")
+    title = input("Please write new name of the book: ")
+    status = input("Please write new status of the book: ")
+    year = int(input("Please write new name of the year: "))
+
+    update(UpdateBookScheme(
+        oid=oid,
+        author=author,
+        title=title,
+        year=year,
+        status=status
+    ))
 
 
 def delete_book() -> None:

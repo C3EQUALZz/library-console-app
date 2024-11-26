@@ -23,10 +23,11 @@ class CreateBookScheme(BaseScheme):
 
 @dataclass(frozen=True)
 class UpdateBookScheme(BaseScheme):
-    title: Optional[str] = None
-    author: Optional[str] = None
-    year: Optional[int] = None
-    status: Optional[str] = None
+    oid: str
+    title: str
+    author: str
+    year: int
+    status: str
 
 
 @dataclass(frozen=True)

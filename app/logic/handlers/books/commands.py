@@ -1,6 +1,5 @@
 from typing import (
-    List,
-    Optional,
+    List
 )
 
 from app.domain.entities.books import Book
@@ -16,7 +15,7 @@ from app.logic.commands.books import (
 )
 from app.logic.exceptions import (
     BookAlreadyExistsException,
-    BookNotExistsException,
+    BookNotExistsException, EmptyLibraryException,
 )
 from app.logic.handlers.books.base import BooksCommandHandler
 
@@ -54,7 +53,7 @@ class UpdateBookCommandHandler(BooksCommandHandler[UpdateBookCommand]):
         """
         books_service: BooksService = BooksService(uow=self._uow)
 
-        if not books_service.check_existence(title=command.title):
+        if not books_service.check_existence(oid=command.oid):
             raise BookNotExistsException()
 
         book: Book = Book(**command.to_dict())
@@ -86,49 +85,75 @@ class GetBookByIdCommandHandler(BooksCommandHandler[GetBookByIdCommand]):
     Handler for finding book using ID, this handler must be linked with GetBookByIdCommand in app/logic/handlers/__init__
     """
 
-    def __call__(self, command: GetBookByIdCommand) -> Optional[Book]:
+    def __call__(self, command: GetBookByIdCommand) -> Book:
         """
         Gets book by ID, if book with provided credentials exist. In other case raises BookNotExistsException.
         :param command: command to execute which must be linked in app/logic/handlers/__init__
         :return: domain entity of the book
         """
         books_service: BooksService = BooksService(uow=self._uow)
-        book = books_service.get_by_id(command.oid)
-        if not book:
+
+        if not books_service.check_existence(oid=command.oid):
             raise BookNotExistsException()
-        return book
+
+        return books_service.get_by_id(oid=command.oid)
 
 
 class GetBookByTitleCommandHandler(BooksCommandHandler[GetBookByTitleCommand]):
     """
     Handler for finding book using Title, this handler must be linked with GetBookByTitleCommand in app/logic/handlers/__init__
     """
-    def __call__(self, command: GetBookByTitleCommand) -> Optional[Book]:
+
+    def __call__(self, command: GetBookByTitleCommand) -> Book:
         """
         Gets book by title, if book with provided credentials exist. In other case raises BookNotExistsException.
         :param command: command to execute which must be linked in app/logic/handlers/__init__
         :return: domain entity of the book
         """
         books_service: BooksService = BooksService(uow=self._uow)
-        book = books_service.get_by_title(command.title)
-        if not book:
+
+        if not books_service.check_existence(title=command.title):
             raise BookNotExistsException()
-        return book
+
+        return books_service.get_by_title(command.title)
 
 
 class GetBookByTitleAndAuthorCommandHandler(BooksCommandHandler[GetBookByTitleAndAuthorCommand]):
     """
-
+    Handler for finding book using title and author,
+    this handler must be linked with GetBookByTitleAndAuthorCommand in app/logic/handlers/__init__
     """
-    def __call__(self, command: GetBookByTitleAndAuthorCommand) -> Optional[Book]:
+
+    def __call__(self, command: GetBookByTitleAndAuthorCommand) -> Book:
+        """
+        Gets book by title and author, if book with provided credentials exist. In other case raises BookNotExistsException.
+        :param command: command to execute which must be linked in app/logic/handlers/__init__
+        :return: domain entity of the book
+        """
         books_service: BooksService = BooksService(uow=self._uow)
-        book = books_service.get_by_title_and_author(title=command.title, author=command.author)
-        if not book:
+
+        if not books_service.check_existence(title=command.title):
             raise BookNotExistsException()
-        return book
+
+        return books_service.get_by_title_and_author(title=command.title, author=command.author)
 
 
 class GetAllBooksCommandHandler(BooksCommandHandler[GetAllBooksCommand]):
+    """
+    Handler for finding all books, this handler must be linked with GetAllBooksCommand in app/logic/handlers/__init__
+    """
+
     def __call__(self, command: GetAllBooksCommand) -> List[Book]:
+        """
+        Get the list of all books in library. If there are no books, raises BookNotExistsException.
+        :param command: command to execute which must be linked in app/logic/handlers/__init__
+        :return: list of domain entities of the books
+        """
         books_service: BooksService = BooksService(uow=self._uow)
-        return books_service.get_all()
+
+        library: List[Book] = books_service.get_all()
+
+        if not library:
+            raise EmptyLibraryException()
+
+        return library

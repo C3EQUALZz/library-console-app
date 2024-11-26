@@ -14,6 +14,7 @@ class CreateBookCommand(AbstractCommand):
 
 @dataclass(frozen=True)
 class UpdateBookCommand(AbstractCommand):
+    oid: str
     title: str
     author: str
     year: int

@@ -24,3 +24,10 @@ class BookAlreadyExistsException(LogicException):
     @property
     def message(self) -> str:
         return f"Book {self.value} already exists"
+
+
+@dataclass(eq=False)
+class EmptyLibraryException(LogicException):
+    @property
+    def message(self) -> str:
+        return "No books in library"

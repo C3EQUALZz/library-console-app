@@ -66,11 +66,11 @@
 
 Сама логика приложения находится в `app`. Внутри данной директории есть 5 модулей.
 
-- `application`
-- `domain`
-- `infrastructure`
-- `logic`
-- `settings`
+- [`application`](app/application)
+- [`domain`](app/domain)
+- [`infrastructure`](app/infrastructure)
+- [`logic`](app/logic)
+- [`settings`](app/settings)
 
 Рассмотрим каждый модуль по отдельности зачем он нужен за что отвечает. 
 

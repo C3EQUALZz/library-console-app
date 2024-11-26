@@ -60,33 +60,91 @@
 - [isort](https://pycqa.github.io/isort/)
 
 > [!IMPORTANT]
-> Все зависимости можно найти в ```pyproject.toml```
+> Все зависимости можно найти в [`pyproject.toml`](pyproject.toml)
 
 # Структура проекта
 
 Сама логика приложения находится в `app`. Внутри данной директории есть 5 модулей.
 
-- application
-- domain
-- infrastructure
-- logic
-- settings
+- `application`
+- `domain`
+- `infrastructure`
+- `logic`
+- `settings`
 
 Рассмотрим каждый модуль по отдельности зачем он нужен за что отвечает. 
 
-## Что такое application?
+## Что такое `domain`? 
 
-Здесь обычно содержится api для работы с приложением. 
-Каждая директория в `api` - это сущность, с которой мы работаем.
+В основе DDD - Домен (Domain). Это модель предмета и его задач, под которые строится приложение. Счет, который оплачиваем, Сообщение, которое отправляем, или Пользователь, которому выставляем оценку. Домены строятся на сущностях из реального мира и ложатся в центр приложения. 
 
-> [IMPORTANT!]
+> [!IMPORTANT]
+> Например, по заданию у нас библиотека, где нужно оперировать книгами, поэтому `domain` - это книга. 
+> Если добавится сервис регистрации, то появится новый `domain` - это человек.
+
+### Что там находится внутри директории `domain`?
+
+Там вы найдете 2 директории, которые вас должны заинтересовать `entity` и `values`. 
+
+- `entities` - это и есть наши домены, про которые я говорил выше. Пример домена книги можете увидеть [здесь](app/domain/entities/books.py)
+- `values` - здесь находятся, так называемые, `value objects`. Грубо говоря, это характеристики нашего домена, т.е поля (атрибуты) `domain`. Почему делается так? Все очень просто: для валидации данных. Пример value objects для книги [здесь](https://github.com/C3EQUALZz/library-console-app/blob/master/app/domain/values/books.py)
+
+> [!NOTE]
+> Если Вы хотите добавить новый `domain`, то создайте `Python` файл, который описывает его. Например, `peoples.py`. Ваш класс должен наследоваться от [`BaseEntity`](app/domain/entities/base.py). Пример прилагаю ниже: 
+
+```python
+@dataclass(eq=False)
+class Human:
+  """
+  Domain which associated with the real human
+  """
+  nickname: NickName
+  email: Email
+  is_active: bool
+```
+
+> [!NOTE]
+> Если Вы хотите добавить новый `value object`, то создайте `Python` файл, который описывает его. Например, `surname.py`. Ваш класс должен наследоваться от [`BaseValueObject`](app/domain/values/base.py). Пример прилагаю ниже:
+
+```python
+@dataclass(frozen=True)
+class Surname(BaseValueObject[str]):
+    """
+    Value object which associated with the book name
+    """
+    value: str
+
+    @override
+    def validate(self) -> None:
+        if not self.value:
+            raise EmptyTextException()
+
+        if len(self.value) > 15:
+            raise ValueTooLongException(self.value)
+
+    @override
+    def as_generic_type(self) -> str:
+        return self.value
+```
+
+## Что такое `application`?
+
+Здесь обычно содержится `api` для работы с приложением. Различные backend endpoints, sockets и т.п. 
+Каждая директория в `api` - это handlers для сущности (домен), с которой мы работаем.
+
+> [!IMPORTANT]
 > Например, по заданию у нас библиотека, где нужно оперировать книгами, поэтому директория называется `books`. 
-> Если бы нужно было добавить функционал для работы с пользователем,
-> то в `application/api` появилась бы директория `people`.
+> Если бы нужно было добавить функционал для работы с пользователем, то в `application/api` появилась бы директория `people`.
 
-### Структура сущности application
+### Что за файлы в `application/api/{domain}`?
 
-- `dependencies.py` - здесь находится логика, 
+- `dependencies.py` - здесь находится логика, к которой должны обращаться handlers, чтобы выполнить определенные бизнес задачи. Делается с той целью, чтобы было минимальное количество кода в handlers. Пример для книги [`dependencies.py`](app/application/api/books/dependecies.py)
+- `handlers.py` - здесь находится та часть, которая выступает "мордой" нашего приложения. В данном случае здесь находятся функции, которые запрашивают данные от пользователя и запускают определенные функции из `dependencies.py`. Например, здесь могут уже находиться ручки `FastAPI`, которые в свою очередь вызывают через [`Depends`](https://fastapi.tiangolo.com/tutorial/dependencies/) определенные функции из `dependencies.py`. Пример для книги [`handlers.py`](app/application/api/books/handlers.py)
+- `schemas.py` - здесь находятся схемы валидации данных или просто [DTO](https://ru.wikipedia.org/wiki/DTO). В реальных кейсах используются [pydantic BaseModel](https://docs.pydantic.dev/latest/api/base_model/) для валидации данных. Пример для книги [`schemas.py`](app/application/api/books/schemas.py)
+
+
+
+
 
 
 

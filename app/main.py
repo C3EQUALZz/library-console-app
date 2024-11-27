@@ -1,4 +1,5 @@
 import logging
+import time
 
 from typing import Final, Tuple, Dict, Callable
 
@@ -36,6 +37,10 @@ logger = logging.getLogger(__name__)
 
 def main() -> None:
     while True:
+        # Делается с той целью, чтобы информация из-под логгера не пересекалась с обычном потоком вывода
+        # Может произойти такая ситуация, как представлено ниже
+        # Select an action (1-6): [ERROR] 2024-11-27T18:15:52+0300: Bad name format: fedos
+        time.sleep(0.2)
         for comment in CHOICES_FOR_ACTION:
             print(comment)
 

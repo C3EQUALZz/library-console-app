@@ -30,7 +30,7 @@ class Book(BaseEntity):
 
     def __post_init__(self) -> None:
         super().__post_init__()
-        logging.debug("Successfully initialized Book instance [%s]", self)
+        logging.debug("Successfully initialized Book instance [ %s ]", self)
 
     __hash__ = BaseEntity.__hash__
     __eq__ = BaseEntity.__eq__

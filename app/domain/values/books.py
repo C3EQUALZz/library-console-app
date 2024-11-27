@@ -1,17 +1,14 @@
 import re
 from dataclasses import dataclass
 from datetime import datetime
-from typing import (
-    NoReturn,
-    override,
-)
+from typing import override
 
 from app.domain.exceptions import (
     BadNameFormatException,
     EmptyTextException,
     FakeYearException,
     InvalidBookStatus,
-    ValueTooLongException,
+    ValueTooLongException, ObsceneTextException,
 )
 from app.domain.utils.enums import BookStatusEnum
 from app.domain.values.base import BaseValueObject
@@ -24,6 +21,16 @@ class Title(BaseValueObject[str]):
     """
     value: str
 
+    russian_swear_words_pattern: str = (
+        r"(?iu)(?<![а-яё])(?:(?:(?:у|[нз]а|(?:хитро|не)?вз?[ыьъ]|с[ьъ]|(?:и|ра)[зс]ъ?|(?:о[тб]|п[оа]д)[ьъ]?|"
+        r"(?:\S(?=[а-яё]))+?[оаеи-])-?)?(?:[её](?:б(?!о[рй]|рач)|п[уа](?:ц|тс))|и[пб][ае][тцд][ьъ]).*?|(?:(?"
+        r":н[иеа]|(?:ра|и)[зс]|[зд]?[ао](?:т|дн[оа])?|с(?:м[еи])?|а[пб]ч|в[ъы]?|пр[еи])-?)?ху(?:[яйиеёю]|л+и(?!ган))"
+        r".*?|бл(?:[эя]|еа?)(?:[дт][ьъ]?)?|\S*?(?:п(?:[иеё]зд|ид[аое]?р|ед(?:р(?!о)|[аое]р|ик)|охую)|бля(?:[дбц]|тс)|"
+        r"[ое]ху[яйиеё]|хуйн).*?|(?:о[тб]?|про|на|вы)?м(?:анд(?:[ауеыи](?:л(?:и[сзщ])?[ауеиы])?|ой|[ао]в.*?|юк(?:ов|"
+        r"[ауи])?|е[нт]ь|ища)|уд(?:[яаиое].+?|е?н(?:[ьюия]|ей))|[ао]л[ао]ф[ьъ](?:[яиюе]|[еёо]й))|елд[ауые].*?|ля[тд]ь|"
+        r"(?:[нз]а|по)х)(?![а-яё])"
+    )
+
     @override
     def validate(self) -> None:
         if not self.value:
@@ -31,6 +38,12 @@ class Title(BaseValueObject[str]):
 
         if len(self.value) > 100:
             raise ValueTooLongException(self.value)
+
+        if not self.value.strip():
+            raise EmptyTextException()
+
+        if re.match(self.russian_swear_words_pattern, self.value):
+            raise ObsceneTextException(self.value)
 
     @override
     def as_generic_type(self) -> str:
@@ -44,7 +57,7 @@ class Author(BaseValueObject[str]):
     """
     value: str
 
-    pattern = (
+    author_full_name_pattern: str = (
         r"^([А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)?\s+([А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)?)(\s+[А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)?)"
         r"?)|([A-Z][a-z]+(-[A-Z][a-z]+)?\s+([A-Z][a-z]+(-[A-Z][a-z]+)?)(\s+[A-Z][a-z]+(-[A-Z][a-z]+)?)?)$"
     )
@@ -57,7 +70,7 @@ class Author(BaseValueObject[str]):
         if len(self.value) > 100:
             raise ValueTooLongException(self.value)
 
-        if not re.match(self.pattern, self.value) is not None:
+        if not re.match(self.author_full_name_pattern, self.value) is not None:
             raise BadNameFormatException(self.value)
 
     @override

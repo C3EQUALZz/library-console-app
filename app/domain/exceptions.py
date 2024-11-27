@@ -51,3 +51,12 @@ class FakeYearException(DomainException):
     @property
     def message(self) -> str:
         return f"Fake year {self.value}, please provide real year for book"
+
+
+@dataclass(eq=False)
+class ObsceneTextException(ApplicationException):
+    text: str
+
+    @property
+    def message(self) -> str:
+        return f"{self.text} is an obscene text"

@@ -271,7 +271,103 @@ class PeopleService:
 ## Что такое `logic`?
 
 Здесь на данном слое собрана вся бизнес логика, где требуется реализовать наш функционал по тз. 
-В `logic` у нас есть `commands` и `events`. 
+В `logic` у нас есть директории `commands` и `events`, `handlers`. 
+
+События - это побочные действия, которые выполняются после определенной команды. Например, при создании пользователя отправить ему email об успешной регистрации. 
+
+### `Commands`
+
+Команды - это действие, которое должно выполнять наше приложение. Например, создать пользователя, создать книгу, удалить книгу. Обычно это оформляется в виде `DTO` класса. Примеры вот [здесь](app/logic/commands/books.py).
+Но если команды это `DTO`, то как осуществлять бизнес логику? Здесь на помощь приходят `handlers`, которые вы можете увидеть ниже. Пока приведу пример того, как написать свою команды для регистрации условного человека в нашей библиотеке. 
+
+```python
+@dataclass(frozen=True)
+class RegisterHumanCommand(AbstractCommand):
+    username: str
+    password: str
+    email: str
+```
+
+### `CommandHandlers`
+
+Это как раз перехватчики наши команд, которые ожидают `DTO`, написанный вами ранее. Именно здесь идет логика уже. Приведу пример того, как написать `handler` для команд. 
+
+```python
+
+CT = TypeVar("CT", bound=AbstractCommand)
+
+class HumanCommandHandler(AbstractCommandHandler[CT], ABC):
+    """
+    Abstract command handler class, from which every users command handler should be inherited from.
+    """
+
+    def __init__(self, uow: PeopleUnitOfWork) -> None:
+        self._uow = uow
+
+class RegisterHumanCommandHandler(HumanCommandHandler[RegisterHumanCommand]):
+
+    def __call__(self, command: RegisterHumanCommand) -> Human:
+        """
+        Registers a new user, if user with provided credentials doesn't exist, and creates event signaling that
+        operation was successfully executed.
+        """
+
+        people_service = PeopleService(uow=self._uow)
+        if people_service.check_user_existence(email=command.email, username=command.username):
+            raise UserAlreadyExistsError
+
+        human = Human(**command.to_dict())
+        human.password = hash_password(human.password)
+
+        return people_service.register(human=human)
+```
+
+Но встает вопрос. Как это все связать, чтобы все заработало? Вам нужно добавить вот [здесь](app/logic/handlers/__init__.py) в словарике команду и её перехватчик.
+Например, чтобы добавить команду и наш хендлер, нужно в конце добавить значение `RegisterHumanCommand: RegisterHumanCommandHandler`. В результате у Вас должен получится вот такой словарик. 
+
+```python
+COMMANDS_HANDLERS_FOR_INJECTION: Dict[Type[CT], Type[AbstractCommandHandler[CT]]] = {
+    CreateBookCommand: CreateBookCommandHandler,
+    GetBookByIdCommand: GetBookByIdCommandHandler,
+    GetBookByTitleCommand: GetBookByTitleCommandHandler,
+    GetBookByTitleAndAuthorCommand: GetBookByTitleAndAuthorCommandHandler,
+    GetAllBooksCommand: GetAllBooksCommandHandler,
+    UpdateBookCommand: UpdateBookCommandHandler,
+    DeleteBookCommand: DeleteBookCommandHandler,
+    RegisterHumanCommand: RegisterHumanCommandHandler,
+}
+``` 
+
+## Что такое `settings`?
+
+Здесь находятся параметры подключения к БД обычно, настройки логгирования и т.п.
+В рамках тестового задания настройка логгирования и класс Settings, в котором я указываю путь к файлу для сохранения `json`.
+
+Приведу пример ниже, как обычно оформляют класс Settings для backend приложений с использованием `pydantic` и `pydantic-settings`. 
+
+```python
+class MongoSettings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_prefix="MONGO_DB",
+        extra="ignore"
+    )
+
+    url: MongoDsn = Field(alias="MONGO_DB_URL")
+    chat_database: str = Field(default="chat", alias="MONGO_DB_CHAT_DATABASE")
+    chat_collection: str = Field(default="chat", alias="MONGO_DB_CHAT_COLLECTION")
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        extra="ignore"
+    )
+
+    database: MongoSettings = MongoSettings()
+```
+
+# Как можно улучшить проект? 
+
+В качестве улучшений можно было бы добавить [`IoC контейнер`](https://en.wikipedia.org/wiki/Inversion_of_control), использовав [`punq`](https://github.com/bobthemighty/punq) или крутой фреймворк [`dishka`](https://github.com/reagento/dishka), чтобы настраивать зависимости в одном месте и не дублировать код, как у меня в [`dependecies.py`](app/application/api/books/dependecies.py).
 
 # Установка проекта и запуск
 

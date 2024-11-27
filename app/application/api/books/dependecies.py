@@ -43,7 +43,7 @@ def create(book_data: CreateBookScheme) -> Book:
 
         messagebus.handle(CreateBookCommand(**book_data.model_dump()))
 
-        logger.info("Successfully created book [%s]", messagebus.command_result)
+        logger.info("Successfully created book [ %s ]", messagebus.command_result)
 
         return messagebus.command_result
 
@@ -70,7 +70,7 @@ def read(book_data: ReadBookScheme) -> Book:
 
         messagebus.handle(GetBookByIdCommand(**book_data.model_dump()))
 
-        logger.info("Successfully find book [%s]", messagebus.command_result)
+        logger.info("Successfully find book [ %s ]", messagebus.command_result)
 
         return messagebus.command_result
 
@@ -97,7 +97,7 @@ def read_all(_: ReadAllBookScheme) -> List[Book]:
 
         messagebus.handle(GetAllBooksCommand())
 
-        logger.info("Successfully read all books [%s]", messagebus.command_result)
+        logger.info("Successfully read all books [ %s ]", messagebus.command_result)
 
         return messagebus.command_result
 
@@ -120,7 +120,7 @@ def update(book_data: UpdateBookScheme) -> Book:
 
         messagebus.handle(UpdateBookCommand(**book_data.model_dump()))
 
-        logger.info("Successfully updated book [%s]", messagebus.command_result)
+        logger.info("Successfully updated book [ %s ]", messagebus.command_result)
 
         return messagebus.command_result
 

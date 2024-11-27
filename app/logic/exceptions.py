@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-
+from abc import ABC
 from app.exceptions import ApplicationException
 
 
 @dataclass(eq=False)
-class LogicException(ApplicationException):
+class LogicException(ApplicationException, ABC):
     @property
     def message(self) -> str:
         return "An logic error has occurred"

@@ -2,11 +2,10 @@ from dataclasses import dataclass
 from typing import Any
 
 from app.exceptions import ApplicationException
-from tomlkit import value
-
+from abc import ABC
 
 @dataclass(eq=False)
-class InfrastructureException(ApplicationException):
+class InfrastructureException(ApplicationException, ABC):
     @property
     def message(self) -> str:
         return "An infrastructure error has occurred"
@@ -34,4 +33,4 @@ class InstanceException(InfrastructureException):
 
     @property
     def message(self) -> str:
-        return f"{value}"
+        return f"{self.value}"

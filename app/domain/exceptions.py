@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-
+from abc import ABC
 from app.exceptions import ApplicationException
 
 
 @dataclass(eq=False)
-class DomainException(ApplicationException):
+class DomainException(ApplicationException, ABC):
     @property
     def message(self) -> str:
         return "Exception on domain layer"

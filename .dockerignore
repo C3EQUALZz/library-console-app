@@ -1,6 +1,9 @@
 /venv
+/.venv
 /.idea
 /.gitignore
 /.github
 LICENSE
 README.md
+poetry.lock
+/tests

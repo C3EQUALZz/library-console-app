@@ -22,8 +22,16 @@ class BaseEntity(ABC):
 
     oid: str = field(default_factory=lambda: str(uuid4()), kw_only=True)
 
+    def __post_init__(self) -> None:
+        for field_name, field_type in self.__annotations__.items():
+            if field_name != 'oid':  # Пропускаем поле oid
+                value = getattr(self, field_name)
+                if not isinstance(value, field_type):
+                    value = field_type(value)
+                    setattr(self, field_name, value)
+
     def to_dict(
-        self, exclude: Optional[Set[str]] = None, include: Optional[Dict[str, Any]] = None
+            self, exclude: Optional[Set[str]] = None, include: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """
         Create a dictionary representation of the entity.

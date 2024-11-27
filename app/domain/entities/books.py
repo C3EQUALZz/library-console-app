@@ -1,4 +1,6 @@
-from dataclasses import dataclass
+import logging
+
+from dataclasses import dataclass, field
 
 from app.domain.entities.base import BaseEntity
 from app.domain.values.books import (
@@ -24,7 +26,11 @@ class Book(BaseEntity):
     title: Title
     author: Author
     year: Year
-    status: Status = Status("in stock")
+    status: Status = field(default_factory=lambda: Status("in stock"))
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        logging.debug("Successfully initialized Book instance [%s]", self)
 
     __hash__ = BaseEntity.__hash__
     __eq__ = BaseEntity.__eq__

@@ -1,8 +1,9 @@
 from dataclasses import dataclass
+from abc import ABC
 
 
 @dataclass(eq=False)
-class ApplicationException(Exception):
+class ApplicationException(Exception, ABC):
     @property
     def message(self) -> str:
         return "An application error has occurred"

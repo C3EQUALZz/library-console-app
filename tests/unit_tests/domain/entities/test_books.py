@@ -1,7 +1,11 @@
 import pytest
-
 from app.domain.entities.books import Book
-from app.domain.values.books import Title, Author, Year, Status
+from app.domain.values.books import (
+    Author,
+    Status,
+    Title,
+    Year,
+)
 
 
 @pytest.mark.parametrize("title, author, year, status", [

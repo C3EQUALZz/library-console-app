@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 from datetime import datetime
-from typing import override
+from typing import override, Final
 
 from app.domain.exceptions import (
     BadNameFormatException,
@@ -13,6 +13,21 @@ from app.domain.exceptions import (
 from app.domain.utils.enums import BookStatusEnum
 from app.domain.values.base import BaseValueObject
 
+RUSSIAN_SWEAR_WORDS_PATTERN: Final[str] = (
+    r"(?iu)(?<![а-яё])(?:(?:(?:у|[нз]а|(?:хитро|не)?вз?[ыьъ]|с[ьъ]|(?:и|ра)[зс]ъ?|(?:о[тб]|п[оа]д)[ьъ]?|"
+    r"(?:\S(?=[а-яё]))+?[оаеи-])-?)?(?:[её](?:б(?!о[рй]|рач)|п[уа](?:ц|тс))|и[пб][ае][тцд][ьъ]).*?|(?:(?"
+    r":н[иеа]|(?:ра|и)[зс]|[зд]?[ао](?:т|дн[оа])?|с(?:м[еи])?|а[пб]ч|в[ъы]?|пр[еи])-?)?ху(?:[яйиеёю]|л+и(?!ган))"
+    r".*?|бл(?:[эя]|еа?)(?:[дт][ьъ]?)?|\S*?(?:п(?:[иеё]зд|ид[аое]?р|ед(?:р(?!о)|[аое]р|ик)|охую)|бля(?:[дбц]|тс)|"
+    r"[ое]ху[яйиеё]|хуйн).*?|(?:о[тб]?|про|на|вы)?м(?:анд(?:[ауеыи](?:л(?:и[сзщ])?[ауеиы])?|ой|[ао]в.*?|юк(?:ов|"
+    r"[ауи])?|е[нт]ь|ища)|уд(?:[яаиое].+?|е?н(?:[ьюия]|ей))|[ао]л[ао]ф[ьъ](?:[яиюе]|[еёо]й))|елд[ауые].*?|ля[тд]ь|"
+    r"(?:[нз]а|по)х)(?![а-яё])"
+)
+
+AUTHOR_FULL_NAME_PATTERN: Final[str] = (
+    r"^([А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)?\s+([А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)?)(\s+[А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)?)"
+    r"?)|([A-Z][a-z]+(-[A-Z][a-z]+)?\s+([A-Z][a-z]+(-[A-Z][a-z]+)?)(\s+[A-Z][a-z]+(-[A-Z][a-z]+)?)?)$"
+)
+
 
 @dataclass(frozen=True)
 class Title(BaseValueObject[str]):
@@ -21,28 +36,15 @@ class Title(BaseValueObject[str]):
     """
     value: str
 
-    russian_swear_words_pattern: str = (
-        r"(?iu)(?<![а-яё])(?:(?:(?:у|[нз]а|(?:хитро|не)?вз?[ыьъ]|с[ьъ]|(?:и|ра)[зс]ъ?|(?:о[тб]|п[оа]д)[ьъ]?|"
-        r"(?:\S(?=[а-яё]))+?[оаеи-])-?)?(?:[её](?:б(?!о[рй]|рач)|п[уа](?:ц|тс))|и[пб][ае][тцд][ьъ]).*?|(?:(?"
-        r":н[иеа]|(?:ра|и)[зс]|[зд]?[ао](?:т|дн[оа])?|с(?:м[еи])?|а[пб]ч|в[ъы]?|пр[еи])-?)?ху(?:[яйиеёю]|л+и(?!ган))"
-        r".*?|бл(?:[эя]|еа?)(?:[дт][ьъ]?)?|\S*?(?:п(?:[иеё]зд|ид[аое]?р|ед(?:р(?!о)|[аое]р|ик)|охую)|бля(?:[дбц]|тс)|"
-        r"[ое]ху[яйиеё]|хуйн).*?|(?:о[тб]?|про|на|вы)?м(?:анд(?:[ауеыи](?:л(?:и[сзщ])?[ауеиы])?|ой|[ао]в.*?|юк(?:ов|"
-        r"[ауи])?|е[нт]ь|ища)|уд(?:[яаиое].+?|е?н(?:[ьюия]|ей))|[ао]л[ао]ф[ьъ](?:[яиюе]|[еёо]й))|елд[ауые].*?|ля[тд]ь|"
-        r"(?:[нз]а|по)х)(?![а-яё])"
-    )
-
     @override
     def validate(self) -> None:
-        if not self.value:
+        if not self.value or not self.value.strip():
             raise EmptyTextException()
 
         if len(self.value) > 100:
             raise ValueTooLongException(self.value)
 
-        if not self.value.strip():
-            raise EmptyTextException()
-
-        if re.match(self.russian_swear_words_pattern, self.value):
+        if re.match(RUSSIAN_SWEAR_WORDS_PATTERN, self.value):
             raise ObsceneTextException(self.value)
 
     @override
@@ -57,20 +59,15 @@ class Author(BaseValueObject[str]):
     """
     value: str
 
-    author_full_name_pattern: str = (
-        r"^([А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)?\s+([А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)?)(\s+[А-ЯЁ][а-яё]+(-[А-ЯЁ][а-яё]+)?)"
-        r"?)|([A-Z][a-z]+(-[A-Z][a-z]+)?\s+([A-Z][a-z]+(-[A-Z][a-z]+)?)(\s+[A-Z][a-z]+(-[A-Z][a-z]+)?)?)$"
-    )
-
     @override
     def validate(self) -> None:
-        if not self.value:
+        if not self.value or not self.value.strip():
             raise EmptyTextException()
 
         if len(self.value) > 100:
             raise ValueTooLongException(self.value)
 
-        if not re.match(self.author_full_name_pattern, self.value) is not None:
+        if not re.match(AUTHOR_FULL_NAME_PATTERN, self.value):
             raise BadNameFormatException(self.value)
 
     @override

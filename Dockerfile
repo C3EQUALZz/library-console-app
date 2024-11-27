@@ -12,6 +12,7 @@ WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONPATH .
 COPY --from=builder requirements.dev.txt /app
 
 RUN apt update -y && \
@@ -20,4 +21,4 @@ RUN apt update -y && \
     musl-dev && \
     pip install --upgrade pip && pip install --no-cache-dir -r requirements.dev.txt
 
-COPY /app/ /app/**
+COPY . /app/

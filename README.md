@@ -420,10 +420,32 @@ python3 app/main.py
 
 ## `Add book`
 
-Соответствует операции `Create` из [`CRUD`](https://ru.wikipedia.org/wiki/CRUD) 
+Соответствует операции `Create` из [`CRUD`](https://ru.wikipedia.org/wiki/CRUD). 
 Здесь Вы вписываете книгу, которую хотите добавить.
-Например, пусть будет у нас будет такой набор данных `author = Abraham Linkoln`, `name = Authority`, `year = 1999`
+Например, пусть будет у нас будет такой набор данных `author = Abraham Linkoln`, `name = Authority`, `year = 1999`.
 
 ## `Delete book`
 
-Соответствует операции 
+Соответствует операции `Delete` из [`CRUD`](https://ru.wikipedia.org/wiki/CRUD).
+Здесь Вы вписываете книгу, которую хотите удалить. 
+Посмотрите в `database.json` `oid` интересующей Вас книги, после этого можете удалить.  
+
+## `Update book`
+
+Соответствует операции `Update` из [`CRUD`](https://ru.wikipedia.org/wiki/CRUD).
+Здесь Вы описываете книгу, которую хотите изменить. 
+Почему обновляются полностью все поля? Все очень просто, так принято, как я видел в книгах.
+
+## `Find book`
+
+Соответствует операции `Read` из [`CRUD`](https://ru.wikipedia.org/wiki/CRUD).
+Здесь у Вас идет поиск книги по `id`. 
+
+## `Show all books`
+
+Соответствует операции `Read` из [`CRUD`](https://ru.wikipedia.org/wiki/CRUD).
+Здесь возвращается список всех книг в библиотеке. 
+
+## `Exit`
+
+Окончание работы программы. 

@@ -10,7 +10,7 @@ jobs:
         python-version: [ "3.12", "3.13" ]
         poetry-version: [ "latest", "main", "1.8.4" ]
         os: [ ubuntu-22.04, macos-latest, windows-latest ]
-      runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Python

@@ -1,6 +1,8 @@
 import logging
-
-from dataclasses import dataclass, field
+from dataclasses import (
+    dataclass,
+    field,
+)
 
 from app.domain.entities.base import BaseEntity
 from app.domain.values.books import (

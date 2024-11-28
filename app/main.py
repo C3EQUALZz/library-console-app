@@ -1,17 +1,21 @@
 import logging
 import time
-
-from typing import Final, Tuple, Dict, Callable
+from typing import (
+    Callable,
+    Dict,
+    Final,
+    Tuple,
+)
 
 from app.application.api.books.handlers import (
     create_book,
     delete_book,
-    update_book,
+    read_all_books,
     read_book,
-    read_all_books
+    update_book,
 )
-
 from app.settings.logger.config import setup_logging
+
 
 CHOICES_FOR_ACTION: Final[Tuple[str, ...]] = (
     "\n--- Menu of Library ---",

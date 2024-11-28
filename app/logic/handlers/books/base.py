@@ -5,7 +5,7 @@ from app.logic.handlers.base import (
     AbstractCommandHandler,
     AbstractEventHandler,
     CT,
-    ET
+    ET,
 )
 
 

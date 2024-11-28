@@ -16,15 +16,14 @@ from app.application.api.books.dependecies import (
     delete,
     read,
     read_all,
-    update
+    update,
 )
-
 from app.application.api.books.schemas import (
     CreateBookScheme,
     DeleteBookScheme,
-    ReadBookScheme,
     ReadAllBookScheme,
-    UpdateBookScheme
+    ReadBookScheme,
+    UpdateBookScheme,
 )
 
 
@@ -68,9 +67,7 @@ def delete_book() -> None:
     """
     oid = input("Please write id of the book: ")
 
-    delete(DeleteBookScheme(
-        oid=oid
-    ))
+    delete(DeleteBookScheme(oid=oid))
 
 
 def read_book() -> None:
@@ -79,11 +76,7 @@ def read_book() -> None:
     """
     oid = input("Please write id of the book: ")
 
-    read(
-        ReadBookScheme(
-            oid=oid
-        )
-    )
+    read(ReadBookScheme(oid=oid))
 
 
 def read_all_books() -> None:

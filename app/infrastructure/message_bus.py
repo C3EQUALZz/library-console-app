@@ -4,7 +4,8 @@ from typing import (
     Dict,
     List,
     Type,
-    Union, TypeVar,
+    TypeVar,
+    Union,
 )
 
 from app.infrastructure.exceptions import MessageBusMessageException
@@ -16,6 +17,7 @@ from app.logic.handlers.base import (
     AbstractEventHandler,
     AbstractHandler,
 )
+
 
 ET = TypeVar("ET", bound=AbstractEvent)
 CT = TypeVar("CT", bound=AbstractCommand)

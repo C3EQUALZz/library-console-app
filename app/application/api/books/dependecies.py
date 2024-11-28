@@ -4,9 +4,9 @@ from typing import List
 from app.application.api.books.schemas import (
     CreateBookScheme,
     DeleteBookScheme,
+    ReadAllBookScheme,
     ReadBookScheme,
     UpdateBookScheme,
-    ReadAllBookScheme,
 )
 from app.domain.entities.books import Book
 from app.exceptions import ApplicationException
@@ -17,12 +17,14 @@ from app.logic.commands.books import (
     CreateBookCommand,
     DeleteBookCommand,
     GetAllBooksCommand,
-    UpdateBookCommand, GetBookByIdCommand,
+    GetBookByIdCommand,
+    UpdateBookCommand,
 )
 from app.logic.handlers import (
     COMMANDS_HANDLERS_FOR_INJECTION,
     EVENTS_HANDLERS_FOR_INJECTION,
 )
+
 
 logger = logging.getLogger(__name__)
 

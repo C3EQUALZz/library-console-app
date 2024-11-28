@@ -3,6 +3,7 @@ import pathlib
 from dataclasses import dataclass
 from typing import Final
 
+
 logger = logging.getLogger(__name__)
 
 PROJECT_DIR: Final[pathlib.Path] = pathlib.Path(__file__).parent.parent.parent

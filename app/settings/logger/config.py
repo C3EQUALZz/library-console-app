@@ -7,6 +7,7 @@ from typing import Final
 
 from app.settings.config import PROJECT_DIR
 
+
 logger = logging.getLogger(__name__)
 
 PATH_TO_LOGGER_CONFIG: Final[os.PathLike[str]] = PROJECT_DIR / "resources" / "config" / "logger-config.json"

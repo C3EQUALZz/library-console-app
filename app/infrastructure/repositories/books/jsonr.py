@@ -6,10 +6,11 @@ from typing import (
 )
 
 from app.domain.entities.books import Book
-from app.infrastructure.exceptions import (
-    BookNotFoundException,
+from app.infrastructure.exceptions import BookNotFoundException
+from app.infrastructure.repositories.base import (
+    AbstractRepository,
+    BaseEntityType,
 )
-from app.infrastructure.repositories.base import AbstractRepository, BaseEntityType
 from app.infrastructure.repositories.books.base import BooksRepository
 
 

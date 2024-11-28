@@ -1,17 +1,22 @@
 import re
 from dataclasses import dataclass
 from datetime import datetime
-from typing import override, Final
+from typing import (
+    Final,
+    override,
+)
 
 from app.domain.exceptions import (
     BadNameFormatException,
     EmptyTextException,
     FakeYearException,
     InvalidBookStatus,
-    ValueTooLongException, ObsceneTextException,
+    ObsceneTextException,
+    ValueTooLongException,
 )
 from app.domain.utils.enums import BookStatusEnum
 from app.domain.values.base import BaseValueObject
+
 
 RUSSIAN_SWEAR_WORDS_PATTERN: Final[str] = (
     r"(?iu)(?<![а-яё])(?:(?:(?:у|[нз]а|(?:хитро|не)?вз?[ыьъ]|с[ьъ]|(?:и|ра)[зс]ъ?|(?:о[тб]|п[оа]д)[ьъ]?|"

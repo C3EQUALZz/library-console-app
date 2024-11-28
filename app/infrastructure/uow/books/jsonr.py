@@ -2,10 +2,10 @@ import json
 import os
 from pathlib import Path
 from typing import (
+    Any,
     List,
     override,
     Self,
-    Any
 )
 
 from app.domain.entities.books import Book
@@ -57,9 +57,11 @@ class JsonAbstractUnitOfWork(AbstractUnitOfWork):
         """
         if self._file_path.exists() and self._file_path.is_file():
             with open(self._file_path, "r", encoding="utf-8") as f:
-                raw_data = json.load(f)
-                return [Book(**item) for item in raw_data]
-        return []
+                try:
+                    raw_data = json.load(f)
+                    return [Book(**item) for item in raw_data]
+                except json.JSONDecodeError:
+                    return []
 
 
 class JsonBooksUnitOfWork(JsonAbstractUnitOfWork, BooksUnitOfWork):
@@ -67,6 +69,7 @@ class JsonBooksUnitOfWork(JsonAbstractUnitOfWork, BooksUnitOfWork):
     Implementation of json book uow.
     Here you must add only repositories for work
     """
+
     def __enter__(self) -> Self:
         uow = super().__enter__()
         self.books: BooksRepository = JsonBooksRepository(session=self._data)

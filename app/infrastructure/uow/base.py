@@ -3,12 +3,12 @@ from abc import (
     abstractmethod,
 )
 from typing import (
+    Any,
+    Dict,
     Generator,
     List,
     Self,
-    Any,
     Tuple,
-    Dict
 )
 
 from app.logic.events.base import AbstractEvent

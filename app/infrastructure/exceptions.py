@@ -1,8 +1,9 @@
+from abc import ABC
 from dataclasses import dataclass
 from typing import Any
 
 from app.exceptions import ApplicationException
-from abc import ABC
+
 
 @dataclass(eq=False)
 class InfrastructureException(ApplicationException, ABC):

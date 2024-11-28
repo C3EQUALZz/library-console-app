@@ -1,5 +1,6 @@
-from dataclasses import dataclass
 from abc import ABC
+from dataclasses import dataclass
+
 from app.exceptions import ApplicationException
 
 
@@ -54,9 +55,18 @@ class FakeYearException(DomainException):
 
 
 @dataclass(eq=False)
-class ObsceneTextException(ApplicationException):
+class ObsceneTextException(DomainException):
     text: str
 
     @property
     def message(self) -> str:
         return f"{self.text} is an obscene text"
+
+
+@dataclass(eq=False)
+class CastException(DomainException):
+    text: str
+
+    @property
+    def message(self) -> str:
+        return f"Failed to cast field {self.text}"

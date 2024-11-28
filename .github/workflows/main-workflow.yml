@@ -1,6 +1,6 @@
 name: main-workflow
 run-name: ${{ github.actor }} is testing changes
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
   pytest:
@@ -15,17 +15,13 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Python
         uses: actions/setup-python@v5
-      - name: Install poetry
-        uses: abatilo/actions-poetry@v3.0.1
-      - name: Setup a local virtual environment (if no poetry.toml file)
-        run: |
-          poetry config virtualenvs.create true --local
-          poetry config virtualenvs.in-project true --local
-      - uses: actions/cache@v3
-        name: Define a cache for the virtual environment based on the dependencies lock file
+      - name: Setup Poetry
+        uses: pronovic/setup-poetry@v2
         with:
-          path: ./.venv
-          key: venv-${{ hashFiles('poetry.lock') }}
+          version: "1.8.0"
+          plugins: "poetry-dynamic-versioning==1.2.0"
+          cache-venv: "true"
+          cache-poetry: "true"
       - name: Install the project dependencies
         run: poetry install
       - name: Run the automated tests (for example)

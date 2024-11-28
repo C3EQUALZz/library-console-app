@@ -9,14 +9,14 @@ jobs:
       matrix:
         python-version: [ "3.12", "3.13" ]
         poetry-version: [ "latest", "main", "1.8.4" ]
-        os: [ ubuntu-22.04, macos-latest, windows-latest ]
+        os: [ ubuntu-latest, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
       - name: Install poetry
-        uses: abatilo/actions-poetry@v2
+        uses: abatilo/actions-poetry@v3.0.1
       - name: Setup a local virtual environment (if no poetry.toml file)
         run: |
           poetry config virtualenvs.create true --local

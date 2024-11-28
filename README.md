@@ -401,8 +401,29 @@ docker compose up -d
 docker exec -it app /bin/bash
 ```
 
-Теперь Вам остается напсисать в консоли:
+Теперь Вам остается написать в консоли:
 
 ```bash
 python3 app/main.py
 ```
+
+# Как вообще работать с приложением?
+
+При терминальном запуске у Вас появится выбор действий. 
+
+- `Add book`
+- `Delete book`
+- `Find book`
+- `Show all books`
+- `Update book`
+- `Exit`
+
+## `Add book`
+
+Соответствует операции `Create` из [`CRUD`](https://ru.wikipedia.org/wiki/CRUD) 
+Здесь Вы вписываете книгу, которую хотите добавить.
+Например, пусть будет у нас будет такой набор данных `author = Abraham Linkoln`, `name = Authority`, `year = 1999`
+
+## `Delete book`
+
+Соответствует операции 

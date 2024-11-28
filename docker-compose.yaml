@@ -4,5 +4,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["tail", "-f", "/dev/null"]
+    stdin_open: true
+    tty: true
+    volumes:
+      - app_data:/app/resources/data
+      - app_logs:/app/resources/logs
 
+volumes:
+  app_data:
+  app_logs:

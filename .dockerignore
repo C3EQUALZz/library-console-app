@@ -5,5 +5,6 @@
 /.github
 LICENSE
 README.md
-poetry.lock
 /tests
+docker-compose.yaml
+Dockerfile

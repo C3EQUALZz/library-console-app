@@ -58,7 +58,8 @@
 - [`mypy`](https://www.mypy-lang.org/)
 - [`ruff`](https://docs.astral.sh/ruff/linter/)
 - [`isort`](https://pycqa.github.io/isort/)
-
+- [`faker`](https://faker.readthedocs.io/en/master/)
+  
 > [!IMPORTANT]
 > Все зависимости можно найти в [`pyproject.toml`](pyproject.toml)
 
@@ -156,7 +157,7 @@ class NickName(BaseValueObject[str]):
 
 Здесь вы найдете директории и `Python` файлы для описания работ. Каждая директория также называется, как и паттерн, которые я указал выше. Давайте рассмотрим каждый из них по отдельности.  
 
-#### Repository
+#### `Repository`
 
 Здесь реализована логика работы с базой данных на уровне объектов. Репозиторий управляет коллекцией доменов (моделей).
 В случае данного тестового задания написана одна имплементация для работы с [книгами относительно JSON](app/infrastructure/repositories/books/jsonr.py).
@@ -186,7 +187,7 @@ class SQLAlchemyUsersRepository(SQLAlchemyAbstractRepository[Book], BooksReposit
         return result.scalar_one()
 ```
 
-#### Unit Of Work
+#### `Unit Of Work`
 
 Название паттерна `Unit of Work` намекает на его задачу управлять атомарностью операций. 
 В моем случае относительного тестового у меня есть [`JsonAbstractUnitOfWork`](app/infrastructure/uow/books/jsonr.py), который описывает логику работы `Unit Of Work` для сохранения в `json`.
@@ -231,7 +232,7 @@ class SQLAlchemyBooksUnitOfWork(SQLAlchemyAbstractUnitOfWork, BooksUnitOfWork):
         return uow
 ```
 
-### Service
+### `Service`
 
 Здесь агрегируется логика `UoW` и `Repository`. Именно из-под данного слоя идет работа с данными уже для обращения в командах.
 Сервисы всегда пишутся на ванильном Python (как я вижу в примерах), так что здесь имеет смысл писать новый сервис, если добавилась новая сущность в проект.  

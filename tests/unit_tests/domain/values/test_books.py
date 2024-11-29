@@ -20,9 +20,9 @@ from faker import Faker
 
 
 @pytest.mark.parametrize("long_title", [
-    *(Faker().text(max_nb_chars=256) for _ in range(10)),
-    *(Faker().text(max_nb_chars=300) for _ in range(10)),
-    *(Faker().text(max_nb_chars=500) for _ in range(10)),
+    *filter(lambda text: len(text) > 100, (Faker().text(max_nb_chars=256) for _ in range(10))),
+    *filter(lambda text: len(text) > 100, (Faker().text(max_nb_chars=300) for _ in range(10))),
+    *filter(lambda text: len(text) > 100, (Faker().text(max_nb_chars=500) for _ in range(10))),
 ])
 def test_title_long_name_raises_exception(long_title: str) -> None:
     with pytest.raises(ValueTooLongException):
@@ -53,9 +53,9 @@ def test_title_with_obscene_raises_exception(title: str) -> None:
 
 
 @pytest.mark.parametrize("long_name", [
-    *(Faker().text(max_nb_chars=256) for _ in range(10)),
-    *(Faker().text(max_nb_chars=300) for _ in range(10)),
-    *(Faker().text(max_nb_chars=500) for _ in range(10)),
+    *filter(lambda text: len(text) > 100, (Faker().text(max_nb_chars=256) for _ in range(10))),
+    *filter(lambda text: len(text) > 100, (Faker().text(max_nb_chars=300) for _ in range(10))),
+    *filter(lambda text: len(text) > 100, (Faker().text(max_nb_chars=500) for _ in range(10))),
 ])
 def test_author_full_name_raises_exception(long_name: str) -> None:
     with pytest.raises(ValueTooLongException):

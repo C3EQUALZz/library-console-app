@@ -8,14 +8,14 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [ "3.12", "3.13" ]
-        os: [ macos-latest ]
+        os: [ macos-latest, ubuntu-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python }}
+          python-version: ${{ matrix.python-version }}
       - name: Setup Poetry
         uses: pronovic/setup-poetry@v2
         with:
